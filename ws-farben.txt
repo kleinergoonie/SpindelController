@@ -1,0 +1,33 @@
+WS2812 LED Farben
+
+Rot blinkend schnell:
+Watchdog aktiv
+
+Orange konstant:
+Fault aktiv, aber kein Watchdog
+
+Magenta pulsierend:
+LAN/W5500 Transport offline oder nicht bereit
+
+Gelb blinkend:
+LAN ist da, aber kein aktueller Remora-Heartbeat
+
+Gruen konstant:
+LAN + Heartbeat ok, Motor aktiv
+
+Cyan konstant:
+LAN + Heartbeat ok, Motor inaktiv
+
+Blinkzeiten (aus ws2812_status.c):
+
+Rot blinkend schnell (Watchdog):
+125 ms an, 125 ms aus (Periode 250 ms)
+
+Magenta pulsierend (LAN/W5500 offline):
+400 ms an, 400 ms aus (Periode 800 ms)
+
+Gelb blinkend (kein aktueller Remora-Heartbeat):
+250 ms an, 250 ms aus (Periode 500 ms)
+
+Hinweis Heartbeat-Timeout:
+Schwelle fuer "kein aktueller Heartbeat" = 1000 ms

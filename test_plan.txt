@@ -1,0 +1,251 @@
+================================================================================
+TESTPLAN - SpindelController AS5600 Hardware-Test
+================================================================================
+Datum: 10. April 2026
+Version: 1.0
+Status: Aktiv
+
+================================================================================
+1. ENCODER-TESTS (AS5600/MT6835)
+================================================================================
+
+Test 1.1: AS5600 Initialisierung
+  Beschreibung: Encoder beim Start korrekt initialisieren
+  Schritte:
+    1. Firmware laden und starten
+    2. AS5600 I2C-Kommunikation prüfen
+  Erwartet: Encoder erkannt, keine Fehler im Status
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 1.2: Position lesen
+  Beschreibung: Encoder-Position korrekt auslesen
+  Schritte:
+    1. Spindel manuell drehen
+    2. Position im Monitor verfolgen
+    3. Mit bekanntem Winkel vergleichen
+  Erwartet: Position ändert sich mit Drehung, genau ±1°
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 1.3: Geschwindigkeit berechnen
+  Beschreibung: RPM korrekt aus Positionen berechnen
+  Schritte:
+    1. Spindel konstant drehen (z.B. 100 RPM)
+    2. Gemessene RPM vergleichen
+  Erwartet: Abweichung < 5% von Sollwert
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+================================================================================
+2. MOTOR-STEUUNG TESTS
+================================================================================
+
+Test 2.1: PWM-Ausgabe
+  Beschreibung: PWM-Signal am Motor-Port messen
+  Schritte:
+    1. Firmware mit PWM = 50% starten
+    2. Signal mit Oszilloskop/Logik-Analyzer messen
+  Erwartet: PWM-Frequenz = configured Hz, Duty = 50%
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 2.2: Motor läuft vorwärts
+  Beschreibung: Motor dreht sich mit positiver Steuerung
+  Schritte:
+    1. Steuerbefehl: Drehzahl = 500 RPM, Richtung = Vorwärts
+    2. Motor beobachten
+  Erwartet: Motor dreht sich vorwärts mit ~500 RPM
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 2.3: Motor läuft rückwärts
+  Beschreibung: Motor dreht sich mit negativer Steuerung
+  Schritte:
+    1. Steuerbefehl: Drehzahl = -500 RPM
+    2. Motor beobachten
+  Erwartet: Motor dreht sich rückwärts mit ~500 RPM
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 2.4: Notbremse (Brake-Funktion)
+  Beschreibung: Motor stoppt bei Brake = 1
+  Schritte:
+    1. Motor auf 1000 RPM beschleunigen
+    2. Brake-Signal setzen
+    3. Motor beobachten
+  Erwartet: Motor stoppt innerhalb 5 Sekunden
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+================================================================================
+3. NETZWERK-TESTS (W5500)
+================================================================================
+
+Test 3.1: Ethernet-Verbindung
+  Beschreibung: W5500 verbindet sich mit Netzwerk
+  Schritte:
+    1. Firmware starten
+    2. Netzwerk-LEDs prüfen
+    3. Mit Ping via IP adressieren
+  Erwartet: Ping antwortet erfolgereich
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 3.2: UDP-Empfang (Remora-Protokoll)
+  Beschreibung: Controller empfängt UDP-Befehle
+  Schritte:
+    1. Mit UDP-Tool Befehl an Controller senden
+    2. Status überprüfen
+  Erwartet: Befehl wird ausgeführt, Quittung kommt zurück
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 3.3: Remora-Feldänderung
+  Beschreibung: Einzelne Remora-Felder können geschrieben werden
+  Schritte:
+    1. Speed/Position/Direction via Remora setzen
+    2. Durchführung prüfen
+  Erwartet: Controller reagiert auf alle Feldänderungen
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+================================================================================
+4. DISPLAY-TESTS (ST7789)
+================================================================================
+
+Test 4.1: Display initialisieren
+  Beschreibung: Display zeigt initiales Bild
+  Schritte:
+    1. Firmware laden
+    2. Display beobachten
+  Erwartet: Display zeigt Startseite/Status-Informationen
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 4.2: Status-Anzeige
+  Beschreibung: Display zeigt aktuelle Werte
+  Schritte:
+    1. Motor drehen lassen
+    2. Display zeigt live Updates
+  Erwartet: RPM, Position, Status aktualisieren sich in Echtzeit
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+================================================================================
+5. TOUCH-INPUT TESTS
+================================================================================
+
+Test 5.1: Touch-Erkennung
+  Beschreibung: Touch-Sensor erkennt Berührung
+  Schritte:
+    1. Display-Oberfläche berühren
+    2. Reaktion beobachten
+  Erwartet: System reagiert auf Touch-Eingabe
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 5.2: Menü-Navigation
+  Beschreibung: Mit Touch zwischen Menüs navigieren
+  Schritte:
+    1. Touch verschiedene Bildschirmbereiche
+    2. Menü-Struktur durchgehen
+  Erwartet: Navigation funktioniert intuitiv und fehlerfrei
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+================================================================================
+6. STATUS-LED (WS2812) TESTS
+================================================================================
+
+Test 6.1: LED-Farben bei verschiedenen Zuständen
+  Beschreibung: WS2812 zeigt Zustand durch Farbe
+  Schritte:
+    1. Firmware starten - prüfe Farbe (Initialisierung)
+    2. Motor einschalten - prüfe Farbe (aktiv)
+    3. Fehler simulieren - prüfe Farbe (Fehler)
+  Erwartet: LED ändert Farbe je nach Zustand
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 6.2: LED-Blinking bei Warnung
+  Beschreibung: LED blinkt bei Warnung/Problem
+  Schritte:
+    1. Warnung auslösen (z.B. Temperatur)
+    2. LED beobachten
+  Erwartet: LED blinkt mit erkennbarem Muster
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+================================================================================
+7. SICHERHEITS-TESTS
+================================================================================
+
+Test 7.1: Geschwindigkeit-Überwachung
+  Beschreibung: System erkennt Überdrehzahl
+  Schritte:
+    1. Drehzahl über MAX_RPM erhöhen
+    2. Sicherheitsreaktion prüfen
+  Erwartet: Motor wird abgeschaltet/gebremst
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 7.2: Timeout-Erkennung
+  Beschreibung: Keine Befehle länger als X Sekunden = Sicherheit
+  Schritte:
+    1. Befehl senden, dann warten (kein neuer Befehl)
+    2. Nach Timeout-Zeit prüfen
+  Erwartet: Motor stoppt automatisch
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 7.3: Fehlerbehandlung
+  Beschreibung: Controller reagiert auf I2C/Netzwerkfehler
+  Schritte:
+    1. Encoder abklemmen (I2C-Fehler)
+    2. Netzwerk unterbrechen
+    3. Reaktion beobachten
+  Erwartet: Sicherer Zustand, keine Crash
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+================================================================================
+8. INTEGRATIONS-TESTS
+================================================================================
+
+Test 8.1: LinuxCNC-Verbindung (Remora)
+  Beschreibung: Controller arbeitet mit LinuxCNC zusammen
+  Schritte:
+    1. LinuxCNC mit Remora-Treiber konfigurieren
+    2. G-Code mit Drehzahl-Kommandos ausführen
+    3. Spindel reagiert korrekt
+  Erwartet: Spindelgeschwindigkeit folgt LinuxCNC-Befehlen
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 8.2: Durchsatztest
+  Beschreibung: Schnelle aufeinanderfolgende Befehle handeln
+  Schritte:
+    1. 100 Befehle pro Sekunde senden
+    2. Jeder Befehl wird ausgeführt
+  Erwartet: Keine verlorenen Befehle, Motor folgt Sollwert-Rampe
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+================================================================================
+9. LANGZEIT-STABILITÄTS-TEST
+================================================================================
+
+Test 9.1: 1-Stunden Betrieb
+  Beschreibung: Controller läuft 1 Stunde ohne Probleme
+  Schritte:
+    1. Motor konstant bei 1000 RPM drehen
+    2. Alle Parameter überwachen
+    3. Nach 1h Status prüfen
+  Erwartet: Keine Fehler, keine Speicherlecks, keine Temperaturprobleme
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+Test 9.2: Wechselbelastung
+  Beschreibung: Motor beschleunigt und verlangsamt 100x
+  Schritte:
+    1. 0 → 1000 RPM → 0 → 1000 RPM (100 Wiederholungen)
+    2. Stabilität prüfen
+  Erwartet: Keine Fehler, keine Positionsabweichung
+  Status: [ ] PASS [ ] FAIL [ ] N/V
+
+================================================================================
+10. NOTIZEN & FEHLERBEHEBUNG
+================================================================================
+
+Bekannte Probleme:
+  - [Hier notieren während Tests]
+
+Beobachtungen:
+  - [Auffälligkeiten und Erkenntnisse]
+
+Nächste Schritte:
+  - [Nach Test-Durchführung aktualisieren]
+
+================================================================================
+Test durchgeführt von: ________________  Datum: _______________
+Signatur/Bestätigung: _________________________________________________
+================================================================================

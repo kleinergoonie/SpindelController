@@ -1,0 +1,400 @@
+SpindelControllerAS5600 - Fehler-/Wiederherstellungs-Testmatrix
+Stand: 2026-04-08
+
+Ziel
+- Systematische Pruefung aller relevanten Fehlerfaelle, Reaktionen und Wiederherstellungs-Pfade.
+- Jeder Testfall endet mit einem klaren Bestanden/Fehler-Ergebnis und kurzen Notizen.
+
+Auswertung
+- BESTANDEN = erwartetes Verhalten vollstaendig beobachtet.
+- FEHLER = Verhalten weicht ab oder Wiederherstellung nicht sauber.
+- N/V = noch nicht verifiziert.
+
+Protokoll-Schema pro Test
+- Test-ID:
+- Kategorie:
+- Ausgangszustand:
+- Ausloeser:
+- Erwartete Reaktion:
+- Wiederherstellungs-Schritt:
+- Erwartetes Wiederherstellungs-Verhalten:
+- Ergebnis: BESTANDEN / FEHLER / N/V
+- Notizen:
+
+Matrix
+
+T01
+- Kategorie: Kaltstart / Netzwerk
+- Ausgangszustand: Geraet stromlos, Ethernet nicht verbunden.
+- Ausloeser: Stromversorgung Einschalten.
+- Erwartete Reaktion:
+  - System startet stabil.
+  - Kein ungewolltes Motor-Aktivieren.
+  - Kein Fehler-Speicher nur wegen fehlendem Link.
+  - W5500-Logs zeigen fehlenden oder spaet kommenden Link, aber keine Blockade der Hauptschleife.
+- Wiederherstellungs-Schritt: Ethernet spaeter anstecken.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - Link kommt hoch.
+  - Netzwerk-Pfad arbeitet weiter ohne Neustart.
+  - Kein Sicherheits-Fehler durch Link-Wechsel.
+- Ergebnis: N/V
+- Notizen:
+
+T02
+- Kategorie: Kaltstart / Netzwerk + Host aus
+- Ausgangszustand: Ethernet verbunden, Host sendet kein Aktivieren.
+- Ausloeser: Stromversorgung Einschalten.
+- Erwartete Reaktion:
+  - Motor bleibt deaktiviert.
+  - Betrieb bleibt 0.
+  - Kein ungewolltes Anlaufen.
+- Wiederherstellungs-Schritt: Host spaeter verbinden und gueltige Befehle senden.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - Kommunikation wird angenommen.
+  - Erst nach explizitem Aktivieren darf der Motor laufen.
+- Ergebnis: N/V
+- Notizen:
+
+T03
+- Kategorie: DHCP / Netzwerk-Name
+- Ausgangszustand: Ethernet verbunden, DHCP aktiv.
+- Ausloeser: Stromversorgung Einschalten oder Ethernet-Wiederverbindung.
+- Erwartete Reaktion:
+  - DHCP-Client startet.
+  - Hostname wird als "Spindelcontroller" gesendet.
+  - Router kann DNS-A-Datensatz anlegen.
+- Wiederherstellungs-Schritt: Router-Lease loeschen, Geraet neu verbinden.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - Lease wird erneuert.
+  - Neuer oder aktualisierter DNS-Eintrag sichtbar.
+- Ergebnis: N/V
+- Notizen:
+
+T04
+- Kategorie: DHCP-Fallback
+- Ausgangszustand: DHCP aktiv, DHCP-Server nicht verfuegbar.
+- Ausloeser: Stromversorgung Einschalten oder DHCP-Zeitbegrenzung.
+- Erwartete Reaktion:
+  - DHCP bleibt LAEUFT oder laeuft in Zeitbegrenzung.
+  - Statische Fallback-IP bleibt erreichbar.
+  - Hauptschleife und UDP-Kommunikation bleiben funktionsfaehig.
+- Wiederherstellungs-Schritt: DHCP-Server wieder verfuegbar machen.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - DHCP-Wiederholung startet automatisch.
+  - Lease kann ohne komplette Firmware-Neustarts uebernommen werden.
+- Ergebnis: N/V
+- Notizen:
+
+T05
+- Kategorie: Encoder fehlt beim Start
+- Ausgangszustand: Encoder elektrisch getrennt oder ungueltig.
+- Ausloeser: Stromversorgung Einschalten.
+- Erwartete Reaktion:
+  - Encoder Initialisierung meldet Fehler.
+  - Nach Zeitbegrenzung wird Encoder-Fehler gesetzt.
+  - Motor bleibt gesperrt.
+  - Fehler-Speicher greift sauber.
+- Wiederherstellungs-Schritt: Encoder korrekt verbinden.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - Gueltige Messwerte kommen wieder.
+  - Fehler geht nicht unkontrolliert weg, solange Quittierung fehlt.
+- Ergebnis: N/V
+- Notizen:
+
+T06
+- Kategorie: Encoder-Ausfall im Betrieb
+- Ausgangszustand: Motor laeuft mit gueltigem Encoder.
+- Ausloeser: Encoder im Lauf trennen oder Signal stoeren.
+- Erwartete Reaktion:
+  - Zeitbegrenzung/Fehler innerhalb der konfigurierten Zeit.
+  - Motor wird sicher abgeschaltet.
+  - Status-Bits und Speicher korrekt gesetzt.
+- Wiederherstellungs-Schritt: Encoder wieder gueltig machen.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - Messung stabilisiert sich.
+  - Speicher bleibt bis korrekter Quittierung aktiv.
+- Ergebnis: N/V
+- Notizen:
+
+T07
+- Kategorie: Fehler-Speicher / Quittierung
+- Ausgangszustand: Ein gespeicherter Fehler liegt an.
+- Ausloeser: Aktivieren bleibt gesetzt.
+- Erwartete Reaktion:
+  - Motor bleibt gesperrt.
+  - Kein automatisches Wiederanlaufen.
+- Wiederherstellungs-Schritt: Aktivieren sauber auf 0 setzen und danach erneut Aktivieren setzen.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - Speicher wird erst bei korrekter Quittierung geloescht.
+  - Danach normaler Wiederanlauf moeglich.
+- Ergebnis: N/V
+- Notizen:
+
+T08
+- Kategorie: Notausschalter im Betrieb
+- Ausgangszustand: Motor laeuft.
+- Ausloeser: Notausschalter betaetigen.
+- Erwartete Reaktion:
+  - Sofort sicherer Motorzustand.
+  - Betrieb 0.
+  - Status-Bits enthalten Notausschalter und Speicher.
+- Wiederherstellungs-Schritt: Notausschalter loesen und quittieren.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - Kein automatischer Wiederanlauf.
+  - Neustart erst nach sauberer Aktivierung erlaubt.
+- Ergebnis: N/V
+- Notizen:
+
+T09
+- Kategorie: Wachter / Hauptschleife-Stall
+- Ausgangszustand: Normalbetrieb.
+- Ausloeser: Wachter- oder Herzschlag-Zeitbegrenzung provozieren.
+- Erwartete Reaktion:
+  - Sicherer Halt.
+  - Wachter-Bit/Fehler-Speicher gesetzt.
+  - Kein unkontrollierter Restart in aktiven Motorbetrieb.
+- Wiederherstellungs-Schritt: Zeitbegrenzungs-Ursache entfernen und quittieren.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - System bleibt sicher.
+  - Motor startet erst nach bewusster Freigabe wieder.
+- Ergebnis: N/V
+- Notizen:
+
+T10
+- Kategorie: Netzwerk-Wiederverbindung im Betrieb
+- Ausgangszustand: Laufender Betrieb mit aktivem Link.
+- Ausloeser: Ethernet waehrend Betrieb trennen und wieder anstecken.
+- Erwartete Reaktion:
+  - Link-Status aendert sich nachvollziehbar.
+  - Kein Firmware-Haenger.
+  - Kommunikations-Pfad erholt sich selbststaendig.
+- Wiederherstellungs-Schritt: Kabel wieder verbinden.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - PHY wieder AUF.
+  - UDP/DHCP-Pfad arbeitet weiter.
+- Ergebnis: N/V
+- Notizen:
+
+T11
+- Kategorie: Neustart bei bestehendem Lease
+- Ausgangszustand: Geraet lief zuvor mit Netzwerk.
+- Ausloeser: Software-Neustart / Flashen / Stromversorgung-Kreis.
+- Erwartete Reaktion:
+  - Start stabil.
+  - Netzwerk kommt wieder.
+  - Kein regressives Verhalten bei Hostname/DNS.
+- Wiederherstellungs-Schritt: Mehrfach wiederholen.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - Reproduzierbarer Wiederanlauf ohne Sonderzustand.
+- Ergebnis: N/V
+- Notizen:
+
+T12
+- Kategorie: Dauerlauf
+- Ausgangszustand: Voll funktionsfaehiges System.
+- Ausloeser: 30 Minuten Betrieb unter typischer Last.
+- Erwartete Reaktion:
+  - Kein Kommunikations-Abbruch.
+  - Kein ungeplanter Fehler.
+  - Keine Drift in Sicherheits-/Regelungspfaden.
+- Wiederherstellungs-Schritt: Nicht zutreffend.
+- Erwartetes Wiederherstellungs-Verhalten: Nicht zutreffend.
+- Ergebnis: N/V
+- Notizen:
+
+T13
+- Kategorie: Ueberstrom im Betrieb
+- Ausgangszustand: Motor laeuft, Strommessung aktiv.
+- Ausloeser: Stromschwelle gezielt ueberschreiten oder Testwert einspeisen.
+- Erwartete Reaktion:
+  - Ueberstrom-Bit wird gesetzt.
+  - Motor geht sofort in sicheren Zustand.
+  - Fehler-Speicher bleibt aktiv.
+- Wiederherstellungs-Schritt: Strom wieder in gueltigen Bereich bringen und sauber quittieren.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - ÜS-Bit geht weg.
+  - Speicher bleibt bis Aktivieren=0 gesetzt.
+  - Danach normaler Wiederanlauf moeglich.
+- Ergebnis: N/V
+- Notizen:
+
+T14
+- Kategorie: Uebertemperatur im Betrieb
+- Ausgangszustand: Motor laeuft, Temperatur-Pfad aktiv.
+- Ausloeser: Temperatur-Schwelle ueberschreiten oder Testwert einspeisen.
+- Erwartete Reaktion:
+  - Uebertemperatur-Bit wird gesetzt.
+  - Motor wird sicher gestoppt.
+  - Fehler-Speicher greift.
+- Wiederherstellungs-Schritt: Temperaturwert wieder in gueltigen Bereich bringen und quittieren.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - ÜT-Bit geht weg.
+  - Speicher bleibt bis korrekter Quittierung gesetzt.
+- Ergebnis: N/V
+- Notizen:
+
+T15
+- Kategorie: AS5600 Magnet-Fehler
+- Ausgangszustand: AS5600 aktiv, System im Leerlauf oder langsamer Betrieb.
+- Ausloeser: Magnet zu schwach / zu stark / nicht erkannt.
+- Erwartete Reaktion:
+  - MD/ML/MH-Status aendern sich nachvollziehbar.
+  - Diagnose-Pfad meldet den Magnet-Zustand.
+  - Bei ungueltigem Encoder-Signal folgt Encoder-Fehler/Stop-Schutz.
+- Wiederherstellungs-Schritt: Magnetlage korrigieren.
+- Erwartetes Wiederherstellungs-Verhalten:
+  - MD/ML/MH normalisieren sich.
+  - Gueltige Encoder-Werte kommen wieder.
+  - Fehler-Speicher bleibt bis Quittierung kontrolliert.
+- Ergebnis: N/V
+- Notizen:
+
+T16
+- Kategorie: Positions-Hysterese Deaktivierung (Disable)
+- Ausgangszustand: Motor laeuft unter Positionsmodus, RPM knapp unter Schwelle.
+- Ausloeser: Erhoehe Soll-RPM schrittweise ueber die Disable-Schwelle (z.B. auf >=5000 rpm).
+- Erwartete Reaktion:
+  - Positionsregelung wird automatisch deaktiviert (Statusbit PDIS gesetzt).
+  - Motor verbleibt in Drehzahlregelung; Host-Sollmodus bleibt aber erhalten.
+  - Keine abrupten Richtungswechsel oder unkontrollierte Bewegungen.
+- Recovery-Schritt: Reduziere RPM unter Enable-Schwelle (z.B. <4500 rpm).
+- Erwartetes Recovery-Verhalten:
+  - Positionsregelung wird wieder freigegeben (PDIS clear).
+  - Host kann wieder Position setzen und Position mode wirksam sein.
+- Ergebnis: N/V
+- Notizen:
+
+T17
+- Kategorie: Positions-Hysterese Grenz- & Hysterese-Test
+- Ausgangszustand: Motor in Position mode, RPM oberhalb der Enable-Schwelle, unterhalb der Disable-Schwelle.
+- Ausloeser: Schalte RPM wiederholt um die Grenzen (z.B. 4450 -> 4550 -> 4990 -> 5010 -> 4490).
+- Erwartete Reaktion:
+  - PDIS setzt bei >=5000 rpm.
+  - PDIS cleared nur unter <4500 rpm.
+  - Kein Flattern beim schnellen Wechsel (hysteresis stabilisiert Zustand).
+- Ergebnis: N/V
+- Notizen:
+
+T16
+- Kategorie: Kommunikationsfehler / falscher Host
+- Ausgangszustand: Netzwerk aktiv, Strict-Host-Filter optional testweise aktivieren.
+- Ausloeser: UDP-Kommandos von falscher IP oder falschem Port senden.
+- Erwartete Reaktion:
+  - Pakete werden verworfen.
+  - Kein ungueltiges Motor-Enable.
+  - System bleibt stabil.
+- Recovery-Schritt: Gueltige Host-IP/Port wieder verwenden.
+- Erwartetes Recovery-Verhalten:
+  - Gueltige Pakete werden wieder akzeptiert.
+  - Keine Neustartpflicht.
+- Ergebnis: N/V
+- Notizen:
+
+T17
+- Kategorie: DHCP-Linkwechsel mit bestehendem Fallback
+- Ausgangszustand: System erreichbar ueber statische Fallback-IP.
+- Ausloeser: Link kurz trennen, wieder verbinden, DHCP-Server verfuegbar.
+- Erwartete Reaktion:
+  - PHY wechselt sauber DOWN/UP.
+  - DHCP-Client startet oder restartet erneut.
+  - Fallback-IP bleibt waehrenddessen benutzbar, sofern konfiguriert.
+- Recovery-Schritt: Warten auf DHCP-Retry-Fenster.
+- Erwartetes Recovery-Verhalten:
+  - Lease oder IP-Update wird uebernommen, falls Server antwortet.
+  - Keine Kommunikationsblockade im Mainloop.
+- Ergebnis: N/V
+- Notizen:
+
+T18
+- Kategorie: Watchdog-Reboot-Erkennung
+- Ausgangszustand: Watchdog aktiv.
+- Ausloeser: Gezielt Watchdog-Reset provozieren.
+- Erwartete Reaktion:
+  - System rebootet definiert.
+  - Bootlog meldet Watchdog-Reboot.
+  - Kein ungewollter Motorstart nach dem Reboot.
+- Recovery-Schritt: Ursache des Stalls entfernen.
+- Erwartetes Recovery-Verhalten:
+  - Wiederanlauf stabil.
+  - Normale Inbetriebnahme nach Quittierung/Host-Freigabe.
+- Ergebnis: N/V
+- Notizen:
+
+T19
+- Kategorie: DHCP-IP-Wechsel / DNS-Aktualisierung
+- Ausgangszustand: DHCP-Lease aktiv.
+- Ausloeser: Router vergibt neue IP oder Lease wird erzwungen erneuert.
+- Erwartete Reaktion:
+  - DHCP-Status zeigt IP_CHANGED oder neues LEASED.
+  - UDP-Socket wird sauber neu geoeffnet.
+  - Neuer Hostname-/DNS-Eintrag ist plausibel.
+- Recovery-Schritt: Host kommuniziert auf neuer IP weiter.
+- Erwartetes Recovery-Verhalten:
+  - Kommunikation bleibt oder wird nach kurzer Umschaltung wiederhergestellt.
+  - Kein Firmware-Haenger.
+- Ergebnis: N/V
+- Notizen:
+
+T20
+- Kategorie: MT6835 Startfehler / kein gueltiges SPI-Sample
+- Ausgangszustand: ENCODER_TYPE_SELECT = MT6835, Encoder elektrisch getrennt oder falsch verdrahtet.
+- Ausloeser: Power-On.
+- Erwartete Reaktion:
+  - Initialread liefert kein gueltiges Startup-Sample.
+  - Encoder steht nicht als verlässlich verfuegbar zur Verfuegung.
+  - Encoder-Fault bzw. sichere Motorsperre greift.
+- Recovery-Schritt: SPI-Verdrahtung oder Versorgung korrigieren, erneut starten.
+- Erwartetes Recovery-Verhalten:
+  - Gueltige MT6835-Samples kommen wieder.
+  - Kein unkontrollierter Motorstart vor expliziter Freigabe.
+- Ergebnis: N/V
+- Notizen:
+
+T21
+- Kategorie: MT6835 CRC-Fehler im Betrieb
+- Ausgangszustand: ENCODER_TYPE_SELECT = MT6835, Motor laeuft mit gueltigem Encoder.
+- Ausloeser: SPI-Signal stoeren, so dass CRC fehlschlaegt oder Daten inkonsistent werden.
+- Erwartete Reaktion:
+  - crc_valid wird ungueltig.
+  - Encoderdaten werden nicht als gueltiges Feedback uebernommen.
+  - Nach Timeout folgt Encoder-Fault mit sicherem Stopp.
+- Recovery-Schritt: Stoerung entfernen, saubere SPI-Kommunikation wiederherstellen.
+- Erwartetes Recovery-Verhalten:
+  - CRC wird wieder gueltig.
+  - Encoderwerte stabilisieren sich.
+  - Fault-Latch bleibt bis Quittierung kontrolliert.
+- Ergebnis: N/V
+- Notizen:
+
+T22
+- Kategorie: MT6835 CSN/SPI-Timing-Fehler
+- Ausgangszustand: ENCODER_TYPE_SELECT = MT6835.
+- Ausloeser: CSN-Leitung stoeren, Takt zu hoch setzen oder Leitungsqualitaet verschlechtern.
+- Erwartete Reaktion:
+  - Winkelwerte springen oder CRC wird ungueltig.
+  - Kein blindes Weiterregeln auf unplausiblen Werten.
+  - Sicherer Stop nach Encoderfehler.
+- Recovery-Schritt: CSN/SCK/MOSI/MISO stabilisieren und Timing wieder gueltig machen.
+- Erwartetes Recovery-Verhalten:
+  - Plausible Winkelwerte kehren zurueck.
+  - Kein Dauerfault nach korrekter Quittierung.
+- Ergebnis: N/V
+- Notizen:
+
+T23
+- Kategorie: MT6835 Drehrichtungs-/Wrap-Test
+- Ausgangszustand: ENCODER_TYPE_SELECT = MT6835, kontrollierter Lauf in beide Richtungen.
+- Ausloeser: Mehrfaches Drehen ueber den Wrap-Punkt und Richtungswechsel.
+- Erwartete Reaktion:
+  - Winkel-Wrap wird korrekt behandelt.
+  - RPM-Berechnung bleibt plausibel.
+  - Kein Sprung auf unrealistische Drehzahlwerte nur durch Wrap.
+- Recovery-Schritt: Nicht zutreffend.
+- Erwartetes Recovery-Verhalten: Nicht zutreffend.
+- Ergebnis: N/V
+- Notizen:
+
+Abschlusskriterien
+- Alle P0-relevanten Testfaelle mindestens einmal PASS.
+- Kritische Recovery-Faelle (Encoder, E-Stop, Watchdog, Netzwerk-Reconnect) reproduzierbar PASS.
+- Dauerlauf bestanden.

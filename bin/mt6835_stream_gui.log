@@ -1,0 +1,89 @@
+﻿==== 2026-04-12 07:13:41 GUI Start ====
+07:13:41 Available ports: COM4
+
+07:13:45 Connected to COM4 @ 115200
+
+07:13:48 Stream gestartet (S gesendet)
+
+07:14:02 Fehler beim Senden stop: Ausnahme beim Aufrufen von "WriteLine" mit 1 Argument(en):  "Ein an das System angeschlossenes Gerät funktioniert nicht.
+"
+
+07:14:16 Disconnected
+ja
+07:14:24 Connected to COM4 @ 115200
+
+07:14:24 BOOT USB connected
+
+07:14:24 BOOT sync done
+
+07:14:24 CLOCK clk_sys=200000000Hz set200=1
+
+07:14:24 BOOT board=waveshare_rp2040_zero
+
+07:14:24 SpindelController: init start
+
+07:14:24 Hardwaretest bring-up stage: 5
+
+07:14:24 ACS712 disabled by config
+
+07:14:24 BOOT remora init done
+
+07:14:24 Hardware watchdog deferred (transport not ready)
+
+07:14:25 BOOT alive t=4026ms
+
+07:14:27 BOOT alive t=5027ms
+
+07:14:27 BOOT alive t=6028ms
+
+07:14:28 BOOT alive t=7029ms
+
+07:14:29 BOOT alive t=8030ms
+
+07:14:30 BOOT alive t=9032ms
+
+07:14:31 BOOT alive t=10033ms
+
+07:14:33 BOOT alive t=11034ms
+
+07:14:33 BOOT alive t=12035ms
+
+07:14:34 BOOT alive t=13036ms
+
+07:14:36 BOOT alive t=14037ms
+
+07:14:36 BOOT alive t=15038ms
+
+07:14:38 BOOT alive t=16040ms
+
+07:14:38 BOOT alive t=17041ms
+
+07:14:40 BOOT alive t=18042ms
+
+07:14:41 BOOT alive t=19043ms
+
+07:14:42 BOOT alive t=20044ms
+
+07:14:43 BOOT alive t=21045ms
+
+07:14:44 BOOT alive t=22047ms
+
+07:14:45 BOOT alive t=23048ms
+
+07:14:46 BOOT alive t=24049ms
+
+07:14:47 BOOT alive t=25050ms
+
+07:14:48 BOOT alive t=26051ms
+
+07:14:49 BOOT alive t=27052ms
+
+07:14:50 BOOT alive t=28053ms
+
+07:14:56 Fehler beim Senden stop: Ausnahme beim Aufrufen von "WriteLine" mit 1 Argument(en):  "Ein an das System angeschlossenes Gerät funktioniert nicht.
+"
+
+07:14:56 Disconnected
+
+07:15:00 Open failed for COM4 @ 115200 : Ausnahme beim Aufrufen von "Open" mit 0 Argument(en):  "Der Anschluss COM4 ist nicht vorhanden."
+

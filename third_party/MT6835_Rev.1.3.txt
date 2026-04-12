@@ -1,0 +1,2402 @@
+﻿MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+Features and Benefits
+￭ Based on advanced AMR Technology  with 
+
+0~360° Full Range Angle Sensing
+
+￭ 21-bit Core Resolution with Maximum 6 8
+ 3 
+
+5
+
+1 0
+ 1
+
+Rotation Speed Up to 120,000 RPM
+
+￭ Output Propagation Delay <10 us
+
+￭ User Auto-Calibration and Distortion 
+
+Compensation with Target INL<±0.07°
+
+￭ -40~125℃ Operating Temperature Range
+General Description
+
+￭ Independent Output Interface: ABZ, UVW， 
+
+PWM and SPI MagnTek’s rotary position sensor MT6835 is
+
+￭ Incremental ABZ Resolution 1~16,384 Pulses an IC based on advanced AMR technology.
+
+A rotating magnetic field in the x-y sensor
+per Revolution User Programmable
+
+plane delivers two sinusoidal output signals
+￭ UVW Output Resolution 1~16 Pole-Pairs per which indicating the angle (α) between the
+
+Revolution User Programmable sensor and the magnetic field direction.
+
+￭ 3.3~5.0V Programmable EEPROM
+The sensor is only sensitive to the magnetic
+
+field direction in x-y plane as the sensing
+
+element output is specially designed to be
+
+independent from the magnetic field
+
+strength. This allows the device to be less
+
+sensitive to magnet variations, stray
+
+magnetic fields, air gap changes and off-axis
+
+misalignment.
+
+The incremental ABZ output mode is
+
+available in this sensor series, making the
+
+chip suitable to replace various optical
+Applications
+
+encoders. The maximum resolution is 16,384
+
+￭ Absolute Angle Position Sensor pulses or 65,536 steps per revolution
+
+￭ BLDC Motor Control A 4-Wire SPI interface allows a host
+
+￭ Servo Motor Control microcontroller to read out the 21-bit
+
+absolute angle position data from MT6835.
+￭ Stepping Motor Control
+
+The absolute angle position is also provided
+￭ Optical Encoder Replacement as a 12-bit PWM output.
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 1 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+Table of Contents
+Features and Benefits………….……………..……………...…………………………………….…….………1
+Applications……………………………….……….…………………………………………………………….…….1
+General Description……..………………..…………………………………….…………………………………1
+1 Pin Configuration…………………………..…………………..……………………………..…………….3
+2 Function Diagram………….………………………………………………………………………………4
+3 Absolute Maximum Ratings……………………………………………………………………………..5
+4 Operating Conditions…..……………………………………………………………………………..5
+5 Electrical Characteristics…………………………………….……………………………………...……..6
+6 Magnetic Input Specifications..………………………….……………………………………...……..9
+7 Output Mode……………………………………………………………………………..…………..……..…10
+
+7.1 I/O Pin Configuration………………...………..…………………...……………….…..………10
+7.2 Reference Circuit……………………….…………………………………………………………...11
+7.3 Quadrature A,B and Zero-Position Output Signal (ABZ Mode)……..……….12
+7.4 UVW Output Mode……………….……..……….…….…………...……………………..……..17
+7.5 Pulse Width Modulation (PWM) Output Mode.……...………………….……….…18
+7.6 SPI Interface……………..….…………………………..……………….……………………..…….19
+
+7.6.1 SPI Reference Circuit…..……………….…………….…..…….…………..………………….19
+7.6.2 SPI Timing Diagram……………….…….………………..…………………………………….20
+7.6.3 SPI Protocol.……...………..………….…….……………...………………………………….…21
+7.6.4 SPI Read One Byte Register…..……..………………..…….……………………………….22
+7.6.5 SPI Write One Byte Register….…..………………………...…………………………….…22
+7.6.6 SPI Program EEPROM……………………..………………….....………………………….…23
+7.6.7 SPI Auto Setting Zero Position…………....….……......……………………………….…24
+7.6.8 SPI Single Byte Read Angle………..………………......…………………..…………….…24
+7.6.9 SPI Burst Read Angle………………..…………….........……………………………….…26
+
+8 Change & Program Zero Position to EEPROM………………….…..…………………….27
+9 Calibration…..………………..……..………….…………………………………………………………….28
+
+9.1 Factory Calibration…………………….…………..…………...……………………….…………28
+9.2 User Auto-Calibration……….………….……………………………………………………..….29
+9.3 User NLC Calibration……..………………………….…………………………....……..……….30
+
+10 Register Map…..……..……………………………………….…………………………………………….31
+11 Magnet Placement..…..……..…..………….……………………………..…………………………….38
+12 Mechanical Angle Direction….…….….………………………………….………………………..39
+13 Package Information………..……………...…………………………………………………...……..40
+14 Copy Rights and Disclaimer…….…………………………………………………….……...……..41
+15 Revision History…………..………………..……………..….………………….…….………………….42
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 2 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+1.    Pin Configuration
+
+16 15 14 13 12 11 10 9
+
+Sensing Center at
+Geometric Center 
+
+1 2 3 4 5 6 7 8
+
+Figure 1: Pin Configuration of MT6835 (TSSOP-16) Package
+
+I/O Pin List
+
+I/O Name # I/O Type Description
+
+U 1 Digital Output Commutation Signal U or –A
+
+V 2 Digital Output Commutation Signal V or –B
+
+W 3 Digital Output Commutation Signal W or -Z
+
+CAL_EN 4 Digital Input Auto-Calibration Enable Pin
+
+MISO 5 Digital Output SPI Data, Master Input Slave Output
+
+MOSI 6 Digital Input SPI Data, Master Output Slave Input
+
+SCK 7 Digital Input SPI Clock 
+
+CSN 8 Digital Input SPI Chip Select
+
+VDD 9 Power Supply 3.3~5.0V Power Supply
+
+OUT 10 Digital Output PWM Output 
+
+TEST 11 Analog Input Factory Test Pin
+
+VSS 12 Power Supply Ground
+
+TEST_EN 13 Digital Input Factory Test Enable 
+
+Z 14 Digital Output Incremental Signal Z
+
+B 15 Digital Output Incremental Signal B
+
+A 16 Digital Output Incremental Signal A
+
+Family Members
+
+Part Number Description
+
+MT6835GT-STD TSSOP-16 Package, Tube (60 Pcs/Tube) or Reel (3000 Pcs/Reel)
+
+*TSSOP-16 Reflow Sensitivity Classification: MSL-3 
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 3 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+2.  Functional Diagram
+
+The MT6835 is manufactured in a CMOS standard process and uses advanced magnetic
+
+sensing technology to sense the magnetic field distribution across the surface of the chip.
+
+The integrated magnetic sensing element array is placed around the center of the device
+
+and delivers a voltage representation of the magnetic field at the surface of the IC.
+
+VDD
+
+LDO EEPROM DSP
+PWM
+
+( Angle, OUT
+Angle  Velocity)
+
+Calculation
+Magnetic 
+Sensing G ADC
+Element
+
+A
+ABZ B
+
+Calibration Z
+G ADC
+
+M U
+UVW/ U V
+-A-B-Z
+
+X W
+
+I/V Interpolator MOSI
+OSC
+
+REF MISO 
+SPI 
+
+SCK
+
+VSS CAL_EN TEST TEST_EN CSN
+
+Figure 2: Block Diagram 
+
+Figure 2 shows a simplified block diagram of the chip, consisting of the magnetic sensing
+
+element modeled by two interleaved Wheatstone bridges to generate cosine and sine
+
+signals, gain stages, analog-to-digital converters (ADC) for signal conditioning, and a digital
+
+signal processing (DSP) unit for encoding. Other supporting blocks such as LDO, etc. are
+
+also included.
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 4 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+3.  Absolute Maximum Ratings (Non-Operating)
+
+Stresses beyond those listed under “Absolute Maximum Ratings” may cause permanent
+
+damage to the device. These are stress ratings only. Functional operation of the device at
+
+these or any other conditions beyond those indicated under “Operating Conditions” is
+
+not implied. Exposure to absolute maximum rating conditions for extended periods may
+
+affect device reliability.
+
+Parameter Min. Max. Unit Notes
+
+DC Voltage at Pin VDD -0.5 6.5 V
+
+Terminal Voltage at Input ABZ, UVW, MISO, MOSI, SCK, CSN, 
+-0.5 VDD V
+
+and Output Pins TEST_EN, OUT, CAL_EN, Test
+
+Output Current at Output Pins -20 20 mA ABZ, UVW, OUT, MISO
+
+Storage Temperature -40 150 ℃
+
+ISCR  (Latch-up Input Current) - ±100 mA AEC-Q100-004
+
+VHBM (ESD Voltage) - ±8.0 KV AEC-Q100-002
+
+VCDM (ESD Voltage) - ±1.5 KV AEC-Q100-011
+
+4.  Operating Conditions
+
+Parameter Min. Max. Unit
+
+DC Voltage at Pin VDD 3.0 5.5 V
+
+Magnetic Flux Density Range 30 1,000 mT
+
+Rotation Speed - 120,000 RPM
+
+Operating Temperature -40 125 ℃
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 5 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+5.  Electrical Characteristics
+
+Operation conditions: Ta=-40 to 125℃, VDD=3.0~5.5V unless otherwise noted.
+
+Symbol Parameter Conditions/Notes Min. Typ. Max. Unit
+
+VDD Supply Voltage - 3.0 3.3~5.0 5.5 V
+
+Idd Supply Current - 15 22 28 mA
+
+LSB Resolution (ABZ Mode) N Steps per Cycle - 360°/N - °
+
+Integral Non-Linearity with 
+Note[1] - ±0.5 ±1.0 °
+
+Factory Calibration
+INL
+
+Integral Non-Linearity with 
+Note[2] ±0.07 °
+
+User Auto-Calibration
+
+Differential Non-Linearity (ABZ 
+DNL @2500 PPR - ±0.005 - °
+
+Mode), Figure 3
+
+TN Transition Noise (ABZ Mode) 25℃ with 'BW’=5 - 0.0015 - °rms
+
+Hyst Hysteresis Programmable - 0.011 - °
+
+TPwrUp Power-Up Time VDD Ramp<100us - 64 - ms
+
+TDelay Propagation Delay Constant Speed - 10 - us
+
+TST Step Response Time Register ‘BW’=5 - 100 - us
+
+Note[1]: The typical error value can be achieved at room temperature and with no off-axis
+
+misalignment error. The maximum error value can be achieved over operation temperature
+
+range, at maximum air gap and with worst-case off-axis misalignment error.
+
+Note[2]: Please follow chapter 9 for the detail of ‘User Auto-Calibration’.
+
+10bit code 
+1023
+
+Actual curve
+
+2 TN
+1 Ideal curve
+
+DNL+1LSB
+0 INL
+
+0.35°
+
+512
+
+0
+
+0° 180° 360° degrees 
+
+Figure 3: Drawing Illustration INL, DNL and TN (for 10-bit case)
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 6 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+ABZ Output Characteristics
+
+Operation conditions: Ta=-40 to 125℃, VDD=3.0~5.5V unless otherwise noted.
+
+Symbol Parameter Conditions/Notes Min. Typ. Max. Unit
+
+ABRES AB Resolution Programmable 1 - 16,384 Pulse/Round
+
+ABFreq A or B Frequency Note(3) - - 2.048 MHz
+
+Note (3): The ABFreq is the product of RS(Rotation Speed) and ABRES. So, for maximum AB
+
+resolution of 16,384 PPR, the maximum supported rotation speed RS is:
+
+ABFreq 2.048MHz
+RSMAX = = =125Hz = 7,500RPM
+
+ABRe s 16,384
+
+Even >2MHz ABFreq is available, but the INL could not be guaranteed when ABFreq is >2MHz
+
+PWM Output Characteristics
+
+Operation conditions: Ta=-40 to 125℃, VDD=3.0~5.5V unless otherwise noted.
+
+Symbol Parameter Conditions/Notes Min. Typ. Max. Unit
+
+FPWM PWM Frequency Programmable -8% 497/994 +8% Hz
+
+TRise Rising Time CL=1nF - - 1 us
+
+TFall Falling Time CL=1nF - - 1 us
+
+EEPROM Characteristics
+
+Operation conditions: Ta=-40 to 125℃, VDD=3.0~5.5V unless otherwise noted.
+
+Symbol Parameter Min. Typ. Max. Unit
+
+VDD Supply Voltage @Erase/Program EEPROM 3.0 - 5.5 V
+
+Endurance Erase/Program Cycles 1,000 - - Cycles
+
+Retention Data Retention @150℃ 10 - -- Years
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 7 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+Digital I/O Characteristics
+
+Operation conditions: Ta=-40 to 125℃, VDD=3.0~5.5V unless otherwise noted.
+
+Symbol Parameter Conditions/Notes Min. Typ. Max. Unit
+
+Digital I/O Input Voltage 
+VIH High Level Voltage - 0.8*VDD - - V
+
+(CSN, MOSI, CLK, CAL_EN)
+
+Digital I/O Input Voltage 
+VIL Low Level Voltage - - - 0.2*VDD V
+
+(CSN, MOSI, CLK, CAL_EN)
+
+Digital I/O Output High 
+Push-Pull
+
+VOH Level Voltage VDD-0.4 - - V
+(@Iout=-2mA)
+
+(ABZ, UVW, MISO, OUT)
+
+Digital I/O Output Low 
+Push-Pull
+
+VOL Level Voltage - - 0.4 V
+(@Iout=2mA)
+
+(ABZ, UVW, MISO, OUT)
+
+TRise Rising Time CL=20pf - - 50 ns
+
+TFall Falling Time CL=20pf - - 50 ns
+
+www.magntek.com.cn | Magnetic Tech Makes Magic Change 8 Rev.1.3    2022.12
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+6.  Magnetic Input Specifications
+Operation conditions: Ta=-40 to 125℃, VDD=3.0~5.5V unless otherwise noted, two-pole
+
+cylindrical diametrically magnetized source.
+
+Symbol Parameter Conditions/Notes Min. Typ. Max. Unit
+
+Recommended Magnet: 
+Dmag Diameter of Magnet Ø10mm x 2.5mm for - 10 - mm
+
+Cylindrical Magnets
+
+Tmag Thickness of Magnet - - 2.5 - mm
+
+Magnetic Input Field 
+Bpk Measure at the IC Surface 30 - 1,000 mT
+
+Amplitude
+
+Magnetic to IC Surface 
+AG Air Gap - 1.0 3.0 mm
+
+Distance
+
+RS Rotation Speed Turn Rounds per Minute - - 120,000 RPM
+
+Misalignment Error 
+Between Sensor Sensing 
+
+DISP Off Axis Misalignment - - 0.3 mm
+Center and Magnet Axis 
+(See Figure 4)
+
+NdFeB (Neodymium Iron 
+TCmag1 Recommended Magnet - -0.12 -
+
+Boron)
+Material and Temperature %/℃
+
+TCmag2 Drift Coefficient SmCo (Samarium Cobalt) - -0.035 -
+
+Off-axis Misalignment
+
+N S
+
+ Air Gap
+
+Figure 4: Magnet Arrangement
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 9 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+7.  Output Mode
+
+The MT6835 provides ABZ, UVW and PWM signals at output pins, and the 21-bit absolute
+
+angle position data could be transferred by the standard 4-Wire SPI interface.
+
+7.1  I/O Pin Configuration
+
+For TSSOP-16 package, ABZ (Single-end or differential), UVW, PWM and SPI Interface are
+
+configured as below table.
+
+I/O Pin Configuration
+
+Pin# UVW+SPI+PWM+ABZ -A-B-Z+SPI+PWM+ABZ
+
+1 U -A
+
+2 V -B
+
+3 W -Z
+
+5 MISO MISO
+
+6 MOSI MOSI
+
+7 SCK SCK
+
+8 CSN CSN
+
+10 OUT(PWM) OUT(PWM)
+
+14 Z Z
+
+15 B B
+
+16 A A
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 10 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+7.2  Reference Circuit
+
+The MT6835 is powered by a single supply VDD (3.3~5.0V), so a decoupling capacitor no less
+
+than 0.1uf between VDD and GND is necessary. For better EMC performance, we highly
+
+recommend adding a TVS between VDD and GND. The default reference circuit is shown in
+
+Figure. 5.
+
+M aster U 1 16 A
+
+V 2 15 B
+
+W 3 14 Z
+
+4 13
+
+MISO 250K 250K
+5 12
+
+H O S T M C U
+MOSI 0.1uf
+
+6 11 TVS(6V)
+SCK
+
+7 10 PWM
+CSN
+
+8 9 VDD
+
+Figure 5: Reference Circuit without User Auto-Calibration
+
+The reference circuit for User Auto-Calibration is shown in Figure. 6, the detail of User Auto-
+
+Calibration please refer to Chapter 9.2.
+
+M aster U 1 16 A
+
+V 2 15 B
+
+W 3 14 Z
+CAL_EN
+
+4 13
+
+MISO 250K 250K
+5 12
+
+H O S T M C U
+MOSI 0.1uf
+
+6 11 TVS(6V)
+SCK
+
+7 10 PWM
+CSN
+
+8 9 VDD
+
+Figure 6: Reference Circuit with User Auto-Calibration
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 11 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+7.3  Quadrature A,B and Zero-Position Output (ABZ Mode)
+
+As shown in Figure 7, when the magnet rotates counter-clock-wise (CCW), the rising edge
+
+of output B leads output A by 1/4 cycle, when the magnet rotates clock-wise (CW), the
+
+rising edge of output A leads output B by 1/4 cycle (or 1 LSB). Output Z indicates the zero
+
+position of the magnet. After chip power-on, the ABZ output is blocked for 64ms to
+
+guarantee proper output.
+
+TOP View TOP View
+
+16 15 14 13 12 11 10 9 16 15 14 13 12 11 10 9
+
+CCW CW
+
+1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
+
+VDD
+
+CCW CW
+
+A
+
+B
+
+64ms
+
+Z
+
+360° 360°
+0° 0°
+
+Figure 7: ABZ output with VDD power on
+
+‘ROT_DIR’ (CCW or CW) Register (EEPROM)  
+
+Reg. ROT_DIR Rotation Direction
+
+0x0 Counter-Clock-wise, Output B leads Output A
+
+0x1 Clock-wise, Output B leads Output A
+
+’ROT_DIR’ is effective for all output types as ABZ, UVW, PWM and SPI Angle data
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 12 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+ABZ resolution is user programmable from 1~16,384 PPR. The relationship between binary
+
+bits, LSBs and PPR resolution of ABZ output are shown in Figure 8 & Figure 9.
+
+Per Revolution 360°
+0°
+
+A 1 16383 16384 16,384 Pulses Per Revolution
+
+B 1 16383 16384 16,384 Pulses Per Revolution
+
+LSB
+
+Z
+1 2 3 4 5
+
+65,536 Steps/LSBs Per Revolution
+
+16 bit=216 LSBs=65,536 Steps=16,384 PPR
+
+Figure 8: ABZ Output Resolution=16 bit=16,384 PPR
+
+Per Revolution 360°
+0°
+
+A 1 9999 10000 10,000 Pulses Per Revolution
+
+B 1 9999 10000 10,000 Pulses Per Revolution
+
+LSB
+
+Z
+1 2 3 4 5 40,000 Steps/LSBs Per Revolution
+
+40,000 Steps=10,000 PPR
+
+Figure 9: ABZ Output Resolution=10,000 PPR
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 13 Rev.1.3    2022.12 
+
+65536 40000
+65535 39999
+65534 39998
+65533 39997
+65532 39996
+65531 39995
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+The resolution of ABZ is defined by a 14-bit register ‘ABZ_RES[13:0]’;
+
+‘ABZ_RES[13:0]’ Register (EEPROM)
+
+Reg. ABZ_RES[13:0] AB Resolution (Pulse per. Round)
+
+0x0000 1
+
+0x0001 2
+
+0x0002 3
+
+. .
+
+. .
+
+. .
+
+0x3FFC 16,381
+
+0x3FFD 16,382
+
+0x3FFE 16,383
+
+0x3FFF 16,384
+
+Output Z indicates the zero position of the magnet which is user programmable, and the
+
+pulse width of Z is selectable as 1, 2, 4, 8, 16 LSBs or 60°, 120°, 180° as shown in Figure
+
+10 and Figure 11. It is guaranteed that one Z pulse is generated for every rotation.
+
+CCW
+
+A
+
+B
+
+2LSB...4LSB...8LSB...16LSB 2LSB...4LSB...8LSB...16LSB
+1LSB 1LSB
+
+Z
+
+360°
+
+0° 0°
+
+Figure 10: Typical ABZ Output with Z pules width=1,2,4,8 and 16 LSBs
+
+www.magntek.com.cn | Magnetic Tech Makes Magic Change 14 Rev.1.3    2022.12
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+CCW
+
+A
+
+B
+
+Z
+60°
+
+120° 180°
+
+360°
+0° 0°
+
+Figure 11: Typical ABZ Output with Z pules width=60°, 120° and 180°
+
+The width of Z pulse is defined by the 3-bit register ‘Z_PUL_WID[2:0]’;
+
+‘Z_PUL_WID[2:0]’ Register (EEPROM）
+
+Reg. Z_PUL_WID[2:0] Width (LSBs/°) Reg. Z_PUL_WID[2:0] Width (LSBs/°)
+
+0x0 1 0x4 16
+
+0x1 2 0x5 60°
+
+0x2 4 0x6 120°
+
+0x3 8 0x7 180°
+
+The absolute position of Z pulse is defined by the 12-bit register ‘ZERO_POS[11:0]’;
+
+‘ZERO_POS[11:0]’ Register (EEPROM)
+
+Reg. ZERO_POS[11:0] Absolute Position (°)
+
+0x000 0
+
+0x001 0.088
+
+0x002 0.176
+
+. .
+
+. .
+
+. .
+
+0xFFE 359.824
+
+0xFFF 359.912
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 15 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+Also, Z pulse phase could be user programmable by ‘Z_PHASE[1:0]’ register as shown in
+
+Figure 12.
+
+CCW ‘Z_PHASE’=00 CCW ‘Z_PHASE’=01
+
+A A
+
+B B
+
+1LSB 1LSB 1LSB 1LSB
+Z Z
+
+360° 360°
+0° 0°
+
+CCW ‘Z_PHASE’=10 CCW ‘Z_PHASE’=11
+
+A A
+
+B B
+
+1LSB 1LSB 1LSB
+Z 1LSB
+
+360° 360°
+0° 0°
+
+Figure 12: Z Pulse Phase with ‘ROT_DIR’=0 , ‘SWAP_AB’=0, ‘Z_EDGE’=0
+
+The relationship of 0° and Z pulse edge is defined by register ‘Z_EDGE’
+
+‘Z_EDGE’ Register (EEPROM)
+
+Reg. Z_EDGE Description
+
+0x0 Z Pulse Rising Edge Aligned with Zero-Degree
+
+0x1 Z Pulse Falling Edge Aligned with Zero-Degree
+
+Z_EDGE=0 Z_EDGE=1
+
+0 degree 0 degree
+
+Figure 13: Z Pulse Edge with 0 degree
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 16 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+7.4 UVW Output Mode
+
+The MT6835 provides U, V and W pulses which are 120° (electrical angle) out of phase as
+
+shown in Figure 14. The cycles of UVW per rotation can be programmed.
+
+U U
+
+V V
+
+W W
+
+0° 60° 120° 180° 240° 300° 360° 360° 300° 240° 180° 120° 60° 0° 
+
+Counter Clockwise Clockwise
+
+Figure 14: Typical Output Waveform for UVW Mode
+
+‘UVW_RES’ Register (EEPROM)
+
+Reg. UVW_RES[3:0] UVW Pole Pairs
+
+0x0 1
+
+0x1 2
+
+0x2 3
+
+0x3 4
+
+0x4 5
+
+0x5 6
+
+0x6 7
+
+0x7 8
+
+0x8 9
+
+0x9 10
+
+0xA 11
+
+0xB 12
+
+0xC 13
+
+0xD 14
+
+0xE 15
+
+0xF 16
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 17 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+7.5  Pulse Width Modulation (PWM) Output Mode
+
+The MT6835 provides a digital Pulse Width Modulation (PWM) output, whose duty cycle is
+
+proportional to the measured angle as shown in Figure 15. PWM is a default output of
+
+Pin.10.
+
+The PWM output consists of a frame of 4119 PWM clock periods. The angle data is
+
+represented with 12-bit resolution in the frame. One PWM clock period represents 0.088°
+
+and has a typical duration of 244ns which also could be programmed to be 488ns.
+
+PWM Frame  994Hz or 497Hz
+
+Start End
+ Pattern  Pattern
+
+Time
+
+16 Clock 8 Clock 
+Periods High Periods Low
+
+Figure 15: PWM Output Frame
+
+‘PWM_FQ’ Register (EEPROM)
+
+Reg. PWM_FQ PWM Frame Frequency
+
+0x0 994 Hz
+
+0x1 497 Hz
+
+‘PWM_SEL[2:0]’Register (EEPROM)
+
+Reg. PWM_SEL[2:0] PWM Data Source
+
+0x0 12-bit Angle Data
+
+0x2 12-bit Velocity Data
+
+Others Factory Test Data
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 18 Rev.1.3    2022.12 
+
+11
+2
+3
+4
+5
+6
+
+4090
+4091
+4092
+4093
+4094
+4095
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+7.6  SPI Interface
+
+The MT6835 also provides a 4-Wire SPI interface for a host MCU both to read back digital
+
+absolute angle information from its internal registers and to program its EEPROM.
+
+7.6.1  SPI Reference Circuit
+The reference circuit for SPI interface of a single chip please refer to Figure 5 and Figure 6.
+
+The multi-chip application is shown in Figure 16.
+
+TVS(6V) TVS(6V) TVS(6V)
+
+0.1uf 0.1uf 0.1uf
+VDD VDD VDD
+
+A1 B1 Z1 A2 B2 Z2 An Bn Zn
+PWM1 PWM2 PWMn
+
+16 15 14 13 12 11 10 9 16 15 14 13 12 11 10 9 16 15 14 13 12 11 10 9
+
+…….
+
+Slave1 Slave2 SlaveN
+
+1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
+
+U1 V1 W1 U2 V2 W2 Un Vn Wn
+
+SCK
+
+MOSI
+
+MISO
+
+HOST MCU
+
+Master
+
+CSN1
+
+CSN2
+
+CSNn
+
+SCK
+
+Command Command Command 
+MOSI + Address + Address + Address 
+
+Hi-Z Hi-Z Hi-Z
+MISO Data1 Data2 Datan
+
+Figure 16: 4-Wire SPI Reference Circuit with multi-chips
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 19 Rev.1.3    2022.12 
+
+CSN1
+
+MISO
+
+MOSI
+
+SCK
+
+CSN2
+
+CSNn
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+7.6.2  SPI Timing Diagram
+
+The MT6835 SPI uses mode3 (CPOL=1, CPHA=1) to exchange data. As shown in Figure 17,
+
+a data transfer starts with the falling edge of CSN. The MT6835 samples data on the rising
+
+edge of SCK, and the data transfer finally stops with the rising edge of CSN.
+
+CSN
+(Input)
+
+TL TSCK TSCKL TSCKH TH
+
+SCK
+(Input)
+
+TDV
+
+MISO Hi-Z Hi-Z
+(Output)
+
+TSTTHD
+
+MOSI
+(Input)
+
+TR TF
+
+CSN,SCK, 0.8VDD
+
+MOSI,MISO 0.2VDD
+
+Figure 17: SPI Timing Diagram
+
+SPI Timing Parameter
+
+Symbol Notes Min. Typ. Max. Unit
+
+TL Time Between CSN Falling Edge and SCK Falling Edge 100 - ns
+
+TSCK Clock Period 60 - ns
+
+TSCKL Low Period of Clock 30 - ns
+
+TSCKH High Period of Clock 30 - ns
+
+TH Time Between SCK Last Rising Edge and CSN Rising Edge 0.5•TSCK - ns
+
+TR Rise Time of Digital Signal (with 20pf Loading Condition) - 10 - ns
+
+TF Fall Time of Digital Signal (with 20pf Loading Condition) - 10 - ns
+
+TDV Data Valid Time of MISO (with 20pf Loading Condition) - - 15 ns
+
+TST Setup Time of MOSI Data 10 - - ns
+
+THD Hold Time of MOSI Data 10 - - ns
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 20 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+7.6.3  SPI Protocol 
+
+CSN
+
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+
+SCK
+
+MOSI C3 C2 C1 C0 A11 A10 A9 A8 A7 A6 A5 A4 A3 A2 A1 A0 DI7 DI6 DI5 DI4 DI3 DI2 DI1 DI0
+
+Command Register Address Data Write to MT6835
+
+MISO Hi-Z
+DO7 DO6 DO5 DO4 DO3 DO2 DO1 DO0
+
+Data Read from MT6835
+
+Figure 18: 4-Wire SPI Timing
+
+An SPI data transfer starts with the falling edge of CSN and stops at the rising edge of CSN.
+
+SCK is the Serial Port Clock, and it is controlled by the SPI master, it is high when there is no SPI
+
+transmission. MOSI (master output slave input) and MISO (master input slave output) is the
+
+Serial Port Data Input and Output, it is driven at the falling edge of SCK and should be
+
+captured at the rising edge of SCK. The ‘MISO’ keeps Hi-Z unless it drives data as shown in
+
+Figure 18.
+
+Bit 1-4:     Operation Command bits C3~C0.
+
+C3~C0 Operation Notes
+
+0011 Read User Read Registers
+
+0110 Write User Write Registers
+
+1100 Program EEPROM User Erase and Program EEPROM
+
+0101 Auto Setting Zero-Position Auto Setting Current Position as Zero Position to Register
+
+1010 Burst Angle Read Read Angle Registers Continuously
+
+Others N/A -
+
+Bit 5-16:    Address A11~A0. This is the address field of the indexed register.
+
+Bit 17-24:  Data DI7~DI0 (Write Operation). This is the data that will be written into the device. 
+
+Bit 17-24:  Data DO7~DO0 (Read Operation). This is the data that will be read from the device.
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 21 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+7.6.4  SPI Read One Byte Register
+
+For single byte read, the operation command C3~C0=‘0011’, and the target 12-bit
+
+register address A11~A0 please refer to Chapter 10.
+
+CSN
+
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+
+SCK
+
+MOSI 0 0 1 1 A11 A10 A9 A8 A7 A6 A5 A4 A3 A2 A1 A0
+
+‘Read’Command Register Address
+
+Hi-Z
+MISO DO7 DO6 DO5 DO4 DO3 DO2 DO1 DO0
+
+Data from MT6835
+
+Figure 19: SPI Read One Byte Register
+
+7.6.5  SPI Write One Byte Register
+
+For single byte write, the operation command C3~C0=‘0110’, and the target 12-bit register 
+
+address A11~A0 please refer to Chapter 10. 
+
+CSN
+
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+
+SCK
+
+MOSI 0 1 1 0 A11 A10 A9 A8 A7 A6 A5 A4 A3 A2 A1 A0 DI7 DI6 DI5 DI4 DI3 DI2 DI1 DI0
+
+‘Write’Command Register Address Data Write to MT6835
+
+Hi-Z
+MISO
+
+Figure 20: SPI Write One Byte Register
+
+www.magntek.com.cn | Magnetic Tech Makes Magic Change 22 Rev.1.3    2022.12
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+7.6.6  SPI Program EEPROM
+
+For EEPROM programming, the operation command C3~C0=‘1100’, and all the data in
+
+‘Register Map’ will be programmed to EEPROM. When the command received successfully,
+
+the acknowledge bits ack7~ack0 will return value 0x55; any other value indicates the command
+
+received failed. Please wait at least 6 seconds before power-down MT6835 after EEPROM
+
+programming.
+
+CSN
+
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+
+SCK
+
+MOSI 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+‘Program EEPROM’ Address all ‘0’
+Command
+
+MISO Hi-Z
+ack7 ack6 ack5 ack4 ack3 ack2 ack1 ack0
+
+Acknowledge Bits: 0x55 for success
+
+Figure 21: SPI Program EEPROM
+
+When the data is programmed to EEPROM, they will be non-volatile; while the data in register
+
+map it is volatile, meaning it is lost when the power goes off. The user could read/write the
+
+register map through SPI interface and program the data of register map into EEPROM by SPI
+
+command.
+
+MCU MT6835
+SPI Command
+
+Read/Write Register Power-On
+Loading
+
+Register Map EEPROM
+Programming
+
+EEPROM
+
+SPI Command
+Program EEPROM
+
+Figure 22: Register Map and EEPROM
+
+www.magntek.com.cn | Magnetic Tech Makes Magic Change 23 Rev.1.3    2022.12
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+7.6.7  SPI Auto Setting Zero Position
+
+MT6835 provide an Auto Setting Zero Position command, which will automatically write current
+
+position as the new Zero Position to the register ‘ZERO_POS[11:0]’. The operation command
+
+is C3~C0=‘0101’, when the command is received successfully, the acknowledge bits
+
+ack7~ack0 will return value 0x55; any other value indicates the command received failed.
+
+CSN
+
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24
+
+SCK
+
+MOSI 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0
+
+  Auto Setting Address all ‘0’
+‘Zero-Position’ Command
+
+MISO Hi-Z
+ack7 ack6 ack5 ack4 ack3 ack2 ack1 ack0
+
+Acknowledge Bits: 0x55 for success
+
+Figure 23: SPI Auto Setting Zero-Position Register
+
+This command only stores the current position into ‘ZERO_POS[11:0]’register. If the user
+
+want to program it to EEPROM, an SPI program EEPROM operation (waiting>1ms after
+
+‘Auto Setting Zero Position’ command) should be additionally done as shown in Figure 21.
+
+7.6.8  SPI Single Byte Read Angle Registers
+
+The 21-bit absolute angle data could be read by SPI interface as shown in Figure 24. In
+
+order to facilitate the user to synchronize the sampling of angle data, when CSN is pulled
+
+down, MT6835 internally latched the data of 0x003~0x006, which will not be refreshed
+
+until all 0x003~0x006 registers have been read out.
+
+www.magntek.com.cn | Magnetic Tech Makes Magic Change 24 Rev.1.3    2022.12
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+When CSN is pulled down, data of 0x003~0x006 is 
+latched at this moment. The new angle data from DSP 
+are ignored until 0x003~0x006 have been read out.  
+
+CSN
+
+SCK
+
+MOSI Read Command Read Command Read Command Read Command
++Address 0x003 +Address 0x004 +Address 0x005 +Address 0x006
+
+Hi-Z Data of Hi-Z Data of Hi-Z Data of Hi-Z Data of Hi-Z
+MISO 0x003 0x004 0x005 0x006
+
+Shadow Period  
+
+Latch the angle data @falling edge of CSN Latch the next angle data
+
+Figure 24: SPI Single Byte Read Angle Register
+
+‘ANGLE[20:0]’Angle Data Register (Read Only)
+
+Address Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0
+
+0x003 ANGLE[20:13]
+
+0x004 ANGLE[12:5]
+
+0x005 ANGLE[4:0] STATUS[2:0]
+
+0x006 CRC[7:0]
+
+0~360° absolute angle θ could be calculated by the below formula with ANGLE[20:0]:
+
+20
+
+ANGLE  i  •2i
+
+= i=0 •360
+221
+
+‘STATUS[2:0]’ Register (Read Only)
+
+STATUS[2:0] Notes
+
+Bit [0] Rotation Over Speed Warning; Default ‘0’, Logic ‘1’ for Warning
+
+Bit [1] Weak Magnetic Field Warning; Default ‘0’, Logic ‘1’ for Warning
+
+Bit [2] Under Voltage Warning; Default ‘0’, Logic ‘1’ for Warning
+
+CRC Data Range: ANGLE[20:0] and STATUS[2:0] total 24bits
+
+CRC polynomial: X8+X2+X+1, MSB (ANGLE[20]) shifts in first.
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 25 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+7.6.9  SPI Burst Read Angle Registers
+
+The MT6835 provides an SPI burst read angle registers mode for faster data transfer than
+
+single byte read mode as shown in Figure 25. The operation command of this mode is
+
+C3~C0=‘1010’, after MCU sends this command with address 0x003, MT6835
+
+continuously outputs angle data of register 0x003~0x006.
+
+In order to facilitate the user to synchronize the sampling of angle data, when CSN is
+
+pulled down, MT6835 internally latches the data of 0x003~0x006, which will not be
+
+refreshed until all 0x003~0x006 registers have been read out.
+
+CSN
+
+SCK
+
+ Command: 1010 
+MOSI +Address : 0x003
+
+Hi-Z Data of Data of Data of Data of Data of Data of Data of Data of Hi-Z
+MISO ...
+
+Reg. 0x003 Reg. 0x004 Reg. 0x005 Reg. 0x006 Reg. 0x003 Reg. 0x004 Reg. 0x005 Reg. 0x006
+
+Data 1 Data 2
+
+Shadow Period 1  Shadow Period 2 
+
+Latch the 1st angle data Latch the 2nd 
+@falling edge of CSN angle data 
+
+Figure 25: SPI Burst Read Angle Registers
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 26 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+8. Change & Program Zero-Position to EEPROM
+
+The‘ZERO_POS[11:0]’register defines the zero degree of MT6835, the default zero
+
+degree of MT6835 with a two-pole magnet is shown in Chapter 12. There are two methods
+
+to change the register ‘ZERO_POS[11:0]’ as shown in Figure 26.
+
+Address Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0 Type
+
+0x009 ZERO_POS[11:4] EEPROM
+
+0x00A ZERO_POS[3:0] Z_EDGE Z_PUL_WID[2:0] EEPROM
+
+(1) Auto Setting by SPI with ‘Auto Setting Zero-Position’ Command
+
+This method can only change the zero-position to current mechanical position.
+
+(2) Manual Calculate Zero Degree and Write Register by SPI
+
+(a) Write data 0x000 to register ‘ZERO_POS[11:0]’by SPI;
+
+(b) Read out the angle data of current position by SPI;
+
+(c) Calculate the target Zero-Position value, write it to ‘ZERO_POS[11:0]’ by SPI;
+
+For both auto and manual methods, an extra SPI ‘Program EEPROM’’ operation is
+
+necessary for storing the new zero-position value into EEPROM, and at least to wait 6
+
+seconds for the EEPROM programming without any other operation.
+
+Current Position: Current Position: 
+A (X1°） A (X1°）
+
+SPI ‘Au
+(C to
+
+h  
+a S
+n e
+
+g tt
+e i
+ n
+Z g
+
+e  
+r Z
+o e
+
+- r
+P o
+
+o -
+s P
+i o
+ti s
+
+o i
+n ti
+
+ o
+to n
+
+ ’
+Cu  C
+
+r o
+re m
+
+n m
+t P a
+
+o n
+s d
+ition A Read & Calculate & Write ‘ZERO-POS’Register 
+
+)
+（Change Zero-Position to Point B)
+
+MT6835 Zero-Position 0° MT6835 Zero-Position 0° 
+
+Target Zero-Position: 
+B (X2°）
+
+Figure 26-1: Auto Setting                                             Figure 26-2: Manual Change
+
+www.magntek.com.cn | Magnetic Tech Makes Magic Change 27 Rev.1.3    2022.12
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+9. Calibration
+
+Three calibration levels are designed in MT6835: the first level of Factory Calibration is
+
+done by MagnTek before the chip is delivered to the user; The second level of User Auto-
+
+Calibration could be optionally done by the user at a constant rotation speed; The third
+
+level User NLC Calibration could be optionally done by the user with SPI interface and
+
+external precision angle reference such as a precision optical encoder.
+
+Accuracy
+
+INL<±0.02°
+（Typical @25 ）
+
+INL<±0.07°
+（Typical @25 ）
+
+INL<±0.5°
+（Typical @25 ）
+
+Factory Calibration User Auto Calibration User NLC Calibration
+
+Figure 27: Three Calibration Levels
+
+9.1 Factory Calibration
+
+MT6835 is factory calibrated before it is delivered to the user. The original offset, gain-
+
+mismatch and phase-error of sine/cosine signals are calibrated by FT testing as shown in
+
+Figure 28, thus the INL could be reduced to less than ±0.5° (typical case).
+
+Figure 28: Offset, Gain-Mismatch and Phase-Error
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 28 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+9.2 User Auto-Calibration
+
+User Auto-Calibration allows the user to configure MT6835 to fit with a specific magnetic
+
+field and assembling condition in an application system. Let the motor rotate at a constant
+
+speed and pull up Pin.4 (CAL_EN) to VDD will enable this calibration, then the DSP of
+
+MT6835 will automatically calculate compensation coefficients compensate the calibration
+
+process. Typically, INL will be reduced to less than ±0.07° when User Auto-Calibration has
+
+been done successfully.
+
+The operation steps:
+
+(1) Setting the rotation speed register for User Auto-Calibration;
+
+User Auto-Calibration Rotation Speed Register (EEPROM)
+
+Reg. AUTOCAL_FREQ[2:0] Description (Rotation Speed: RPM)
+
+0x0 3200≤Speed<6400
+
+0x1 1600≤Speed<3200
+
+0x2 800≤Speed<1600
+
+0x3 400 ≤Speed< 800
+
+0x4 200≤Speed<400
+
+0x5 100≤Speed<200
+
+0x6 50≤Speed<100
+
+0x7 25≤Speed<50
+
+(2) Rotating the system at a constant speed with the present range;
+
+(3) Pull up CAL_EN (Pin.4) to VDD to start User Auto-Calibration. Keep the system rotating
+
+at the set speed for more than 64 rounds. Monitor PWM (Pin.10) Output
+
+(When Pin.4 tied to VDD, Pin.10 is also configured as calibration status output).
+
+PWM Output Duty-Cycle Description
+
+50% Running Auto Calibration
+
+25% Calibration Failed
+
+>99% Calibration Successful
+
+The calibration status also could be read from register 0x113[7:6]:
+
+0x113[7:6]=00, No Calibration ; 0x113[7:6]=01, Running Calibration;
+
+0x113[7:6]=10, Calibration Failed; 0x113[7:6]=11, Calibration Successful;
+
+(4) If calibration has failed, please check the system and then re-calibration again;
+
+(5) When calibration is successful, please wait >6s and power-down the chip;
+
+(6) Other operations cannot be performed until the chip is powered on again;
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 29 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+9.3 User NLC Calibration
+
+The User NLC (Non-Linearity Compensation) Calibration of MT6835 provides a 256-point
+
+look-up table for further INL improvement as shown in Figure 29. A possible calibration
+
+system is shown in Figure 30, a high precision optical encoder (≥21-bit) is needed to provide
+
+the ideal angle reference when doing the User NLC Calibration.
+
+MT6835 Output
+Look-up Table
+
+P1' P1
+
+360° P256'
+P2' . P2 P255'
+
+.. P254' P256
+P253 P255
+
+P256' P256 P252' P254
+P251'
+
+P250' P252 P253'
+
+P249 P251
+P250
+
+P249'
+
+P8' P9' Angle Reference
+P7'
+
+P9
+P6' P8
+
+P5 P7 MT6835 Output
+P4'
+
+P3' P6
+P2'
+
+P4 P5'
+
+P1' P3
+P1 P2
+
+0° 360° Physical Position
+
+Figure 29: User NLC Calibration 
+
+Angle Reference
+MT6835 Outpout
+
+MCU
+For Calibration
+
+NLC Calibration Data
+For Look-up Table
+
+Moter1 Servo Moter1 Servo Moter2
+Connector
+
+ECU (Master) (Slave)
+
+Control
+
+Figure 30: Possible User NLC Calibration System 
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 30 Rev.1.3    2022.12 
+
+MT6835
+
+ 21-bit t
+Optical Encoder
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+10.  Register Map
+
+Address Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0 Type
+
+0x001 USER_ID[7:0] EEPROM
+
+0x002 Not Used NA
+
+0x003 ANGLE[20:13] Read Only
+
+0x004 ANGLE[12:5] Read Only
+
+0x005 ANGLE[4:0] STATUS[2:0] Read Only
+
+0x006 CRC[7:0] Read Only
+
+0x007 ABZ_RES[13:6] EEPROM
+
+0x008 ABZ_RES[5:0] ABZ_OFF AB_SWAP EEPROM
+
+0x009 ZERO_POS[11:4] EEPROM
+
+0x00A ZERO_POS[3:0] Z_EDGE Z_PUL_WID[2:0] EEPROM
+
+0x00B Z_PHASE[1:0] UVW_MUX UVW_OFF UVW_RES[3:0] EEPROM
+
+0x00C MagnTek Use Only NLC_EN PWM_FQ PWM_POL PWM_SEL[2:0] EEPROM
+
+0x00D MagnTek Use Only ROT_DIR HYST[2:0] EEPROM
+
+0x00E GPIO_DS AUTOCAL_FREQ[2:0] MagnTek Use Only EEPROM
+
+0x00F MagnTek Use Only EEPROM
+
+0x010 MagnTek Use Only EEPROM
+
+0x011 MagnTek Use Only BW[2:0] EEPROM
+
+0x012 MagnTek Use Only EEPROM
+
+0x013
+
+~ NLC Byte 0x00~0xBF (Total 192 Bytes) EEPROM
+
+0x0D2
+
+Warning: Do Not Change the ‘MagnTek Use Only’ Bits
+
+(1) 0x001 User_ID (EEPROM)
+
+Address Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0 Type
+
+0x001 USER_ID[7:0] EEPROM
+
+• ‘USER_ID[7:0]’is a free byte for the user.
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 31 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+(2) 0x003~ 0x006 Angle Data Register (Read Only)
+
+Address Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0 Type
+
+0x003 ANGLE[20:13] Read Only
+
+0x004 ANGLE[12:5] Read Only
+
+0x005 ANGLE[4:0] STATUS[2:0] Read Only
+
+0x006 CRC[7:0] Read Only
+
+• 0~360° absolute angle θ could be calculated by the below formula with ANGLE[20:0]:
+20
+
+ANGLE[i]•2i
+
+= i=0 •360
+221
+
+• ‘STATUS[2:0]’indicates some warnings of the chip;
+
+STATUS[2:0] Notes
+
+Bit [0] Rotation Over Speed Warning; Default ‘0’, Logic ‘1’ for Warning
+
+Bit [1] Weak Magnetic Field Warning; Default ‘0’, Logic ‘1’ for Warning
+
+Bit [2] Under Voltage Warning; Default ‘0’, Logic ‘1’ for Warning
+
+• ‘CRC[7:0]’gives the redundant check of bits ANGLE[20:0] and STATUS[2:0], totally
+
+24bits. The CRC polynomial: X8+X2+X+1, MSB (ANGLE[20]) shifts in first.
+
+(3) 0x007~ 0x008 ABZ Resolution and Related Registers (EEPROM)
+
+Address Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0
+
+0x007 ABZ_RES[13:6]
+
+0x008 ABZ_RES[5:0] ABZ_OFF AB_SWAP
+
+• ‘ABZ_RES[13:0]’ configures the resolution of AB output， please refer to Chapter 7.3;
+
+Reg. ABZ_RES[13:0] AB Resolution (Pulse per. Round) Factory Default Setting
+
+0x0000 1 √
+
+0x0001 2
+
+… … … …
+
+0x3FFE 16,383
+
+0x3FFF 16,384
+
+www.magntek.com.cn | Magnetic Tech Makes Magic Change 32 Rev.1.3    2022.12
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+• ‘ABZ_OFF’ configures the on/off state of ABZ output;
+
+Reg. ABZ_OFF ABZ Output Factory Default Setting
+
+0x0 ON √
+
+0x1 OFF
+
+• ‘AB_SWAP’ configures the swapping of incremental output A and B;
+
+Reg. AB_SWAP AB Output Factory Default Setting
+
+0x0 No Swap √
+
+0x1 Swap
+
+(4) 0x009~ 0x00A Z Pulse Related Registers (EEPROM)
+
+Address Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0
+
+0x009 ZERO_POS[11:4]
+
+0x00A ZERO_POS[3:0] Z_EDGE Z_PUL_WID[2:0]
+
+• ‘ZERO_POS[11:0]’ configures the Zero-Position of MT6835, it is effective for all outputs;
+
+Reg. ZERO_POS[11:0] Absolute Position (°) Factory Default Setting
+
+0x000 0 √
+
+0x001 0.088
+
+… … … …
+
+0xFFE 359.824
+
+0xFFF 359.912
+
+• ‘Z_EDGE’ configures the relationship of Z pulse edge and zero degree;
+
+Reg. Z_EDGE Z Pulse Edge with 0° Factory Default Setting
+
+0x0 Rising Edge Aligned to 0° √
+
+0x1 Falling Edge Aligned to 0°
+
+www.magntek.com.cn | Magnetic Tech Makes Magic Change 33 Rev.1.3    2022.12
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+• ‘Z_PUL_WID[2:0]’ configures the width of Z pulse.
+
+Reg. Z_PUL_WID[2:0] Width (LSBs/°) Factory Default Setting
+
+0x0 1 √
+
+0x1 2
+
+0x2 4
+
+0x3 8
+
+0x4 16
+
+0x5 60°
+
+0x6 120°
+
+0x7 180°
+
+(5) 0x00B Z_PHASE and UVW Related Registers (EEPROM)
+
+Address Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0
+
+0x00B Z_PHASE[1:0] UVW_MUX UVW_OFF UVW_RES[3:0]
+
+• ‘Z_PHASE[1:0]’ configures the phase between Z and A/B output， please refer to
+
+Figure 12 on Page-15;
+
+• ‘UVW_MUX’ configures UVW pins (Pin.1~Pin.3) output UVW or –A-B-Z ;
+
+Reg. UVW_MUX UVW Output Pin Factory Default Setting
+
+0x0 UVW √
+
+0x1 -A-B-Z
+
+• ‘UVW_OFF’ configures the on/off state of the UVW output;
+
+Reg. UVW_OFF UVW Output Factory Default Setting
+
+0x0 ON √
+
+0x1 OFF
+
+• ‘UVW_RES[3:0]’ configures the resolution of UVW output;
+
+Reg. UVW_RES[3:0] UVW Pole Pairs Factory Default Setting
+
+0x0 1 √
+
+0x1 2
+
+… … … …
+
+0xE 15
+
+0xF 16
+
+www.magntek.com.cn | Magnetic Tech Makes Magic Change 34 Rev.1.3    2022.12
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+(6) 0x00C PWM and NLC Calibration Related Registers (EEPROM)
+
+Address Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0
+
+0x00C MagnTek Use Only NLC_EN PWM_FQ PWM_POL PWM_SEL[2:0]
+
+• ‘NLC_EN’ enables NLC Calibration
+
+Reg. NLC_EN NLC Calibration Factory Default Setting
+
+0x0 Disabled √
+
+0x1 Enabled
+
+• ‘PWM_FQ’ configures the PWM frame frequency ;
+
+Reg. PWM_FQ PWM Frame Frequency Factory Default Setting
+
+0x0 994 Hz √
+
+0x1 497 Hz
+
+• ‘PWM_POL’ configures PWM effective voltage level;
+
+Reg. PWM_POL PWM Polarity Factory Default Setting
+
+0x0 High Voltage Effective √
+
+0x1 Low Voltage Effective
+
+• ‘PWM_SEL[2:0]’ configures the PWM output source;
+
+Reg. PWM_SEL[2:0] PWM Data Source Factory Default Setting
+
+0x0 12-bit Angle Data √
+
+0x2 12-bit Velocity Data
+
+Others Factory Test Data
+
+(7) 0x00D (EEPROM)
+
+Address Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0
+
+0x00D MagnTek Use Only ROT_DIR HYST[2:0]
+
+• ‘ROT_DIR’ configures the rotation direction (logic 0 for CCW), please refer to Figure 7;
+
+Reg. ROT_DIR Rotation Direction Factory Default Setting
+
+0x0 Counter-Clockwise √
+
+0x1 Clockwise
+
+www.magntek.com.cn | Magnetic Tech Makes Magic Change 35 Rev.1.3    2022.12
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+• ‘HYST[2:0]’ configures the hysteresis window for angle output
+
+Reg. HYST[2:0] Hysteresis Window Factory Default Setting
+
+0x0 0.022°
+
+0x1 0.044°
+
+0x2 0.088°
+
+0x3 0.176°
+
+0x4 0
+
+0x5 0.003°
+
+0x6 0.006°
+
+0x7 0.011° √
+
+(8) 0x00E (EEPROM)
+
+Address Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0
+
+0x00E GPIO_DS AUTOCAL_FREQ[2:0] MagnTek Use Only
+
+• ‘GPIO_DS’ configures the GPIO drive capability;
+
+Reg. GPIO_DS GPIO Drive Capability Factory Default Setting
+
+0x0 Default Level √
+
+0x1 Doubled Level
+
+• ‘AUTOCAL_FREQ[2:0]’ configures the rotation speed for Auto Calibration;
+
+Reg. AUTO_CAL_FREQ[2:0] Description (Rotation Speed: RPM) Factory Default Setting
+
+0x0 3200≤Speed<6400
+
+0x1 1600≤Speed<3200
+
+0x2 800≤Speed<1600
+
+0x3 400 ≤Speed< 800 √
+
+0x4 200≤Speed<400
+
+0x5 100≤Speed<200
+
+0x6 50≤Speed<100
+
+0x7 25≤Speed<50
+
+www.magntek.com.cn | Magnetic Tech Makes Magic Change 36 Rev.1.3    2022.12
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+(8) 0x011 System Bandwidth (EEPROM)
+
+Address Bit7 Bit6 Bit5 Bit4 Bit3 Bit2 Bit1 Bit0
+
+0x011 MagnTek Use Only BW [2:0]
+
+• ‘BW[2:0]’ configures the MT6835’s system bandwidth.
+
+Reg. BW[2:0] Description Response Factory Default Setting
+
+0x0 System Bandwidth Baseline Slow (Better Noise)
+
+0x1 Baseline x 2
+
+0x2 Baseline x 4
+
+0x3 Baseline x 8
+
+0x4 Baseline x 16
+
+0x5 Baseline x 32 √
+
+0x6 Baseline x 64
+
+0x7 Baseline x 128 Fast (Worse Noise)
+
+www.magntek.com.cn | Magnetic Tech Makes Magic Change 37 Rev.1.3    2022.12
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+11.  Magnet Placement
+
+It is required that the magnet’s center axis be aligned with the sensing element center of
+
+MT6835 with the air-gap as small as possible. Any misalignment introduces additional
+
+angle error and big air-gap also weakens the magnetic field which could be sensed by the
+
+device. Magnets with larger diameter are more tolerant to DISP (off-axis misalignment)
+
+and big AG (air-gap between Magnet and device).
+
+INL vs. DISP for Φ10 magnet
+0.8
+
+0.7
+
+0.6
+
+0.5 AG=1mm
+
+0.4
+AG=2mm
+
+0.3
+
+AG=3mm
+0.2
+
+0.1
+
+0
+0 0.1 0.2 0.3 0.4 0.5 0.6
+
+DISP (mm)
+
+Figure 31: INL vs DISP and AG with Factory Calibration Only
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 38 Rev.1.3    2022.12 
+
+INL(deg)
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+12.  Mechanical Angle Direction
+
+Top View
+
+0 degree 90 degree
+
+16 15 14 13 12 11 10 9 16 15 14 13 12 11 10 9
+
+N
+
+S
+
+1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
+
+180 degree 270 degree
+
+16 15 14 13 12 11 10 9 16 15 14 13 12 11 10 9
+
+1 2 3 4 5 6 7 8 1 2 3 4 5 6 7 8
+
+Counter-Clockwise Rotation (CCW)
+
+（ with Register ‘ROT-DIR’=0）
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 39 Rev.1.3    2022.12 
+
+N
+
+S
+
+N
+
+S
+
+N
+
+S
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+13.  Package Information
+
+Z
+
+Y
+
+X
+
+Dimensions in Millimeters Dimensions in Inches
+Symbol
+
+Min. Max. Min. Max.
+
+D 4.900 5.100 0.193 0.201
+
+E 6.250 6.550 0.246 0.258
+
+b 0.190 0.300 0.007 0.012
+
+c 0.090 0.200 0.004 0.008
+
+E1 4.300 4.500 0.169 0.177
+
+A 1.200 0.047
+
+A2 0.800 1.000 0.031 0.039
+
+A1 0.050 0.150 0.002 0.006
+
+e 0.65 (BSC) 0.026 (BSC)
+
+L 0.500 0.700 0.020 0.028
+
+H 0.25 (TYP) 0.01 (TYP)
+
+θ 1° 7° 1° 7°
+
+X 2.450 2.550 0.097 0.101
+
+Y 2.150 2.250 0.085 0.089
+
+Z 0.210 0.370 0.016 0.024
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 40 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+14. Copy Rights and Disclaimer
+
+1. This document may not be reproduced or duplicated, in any form, in whole or in part
+
+without prior written consent of MagnTek . Copyrights © 2021, MagnTek Incorporated.
+
+2. MagnTek reserves the right to make changes to the information published in this
+
+document at anytime without notice.
+
+3. MagnTek’s products are limited for use in normal commercial applications. MagnTek’s
+
+products are not to be used in any device or system, including but not limited to
+
+medical life support equipment and system.
+
+For the latest version of this document, please visit our website: www.magntek.com.cn
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 41 Rev.1.3    2022.12 
+
+
+
+MT6835
+21-Bit High Accuracy Magnetic Angle Encoder IC
+
+15. Revision History
+
+Revision Date Comments
+
+0.5 2021.01 Initial Release as Draft
+
+1.0 2021.04 Formal Release
+
+Update Figure 24 Timing 
+1.1 2022.02
+
+Add AB Maximum Frequency
+
+1.2 2022.05 Update Chapter 7.6.7 & 7.6.8
+
+Update Figure 7
+
+1.3 2022.12 Update Default Hyst=0.011°
+
+Update Chapter 7.6.2 
+
+www.magntek.com.cn  | Magnetic Tech Makes Magic Change 42 Rev.1.3    2022.12

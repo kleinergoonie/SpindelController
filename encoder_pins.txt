@@ -1,0 +1,45 @@
+Encoder Pin-Belegung
+Stand: config.h (aus Firmware abgelesen)
+Aktiver Encoder: MT6835 (ENCODER_TYPE_SELECT = ENCODER_TYPE_MT6835)
+
+============================================================
+BOARD: Waveshare RP2040 Plus 16MB
+============================================================
+
+MT6835 -- SPI1
+  MISO  GP4
+  MOSI  GP5
+  SCK   GP6
+  CSN   GP7
+
+AS5600 (alternativ, nicht gleichzeitig) -- I2C0
+  SDA   GP4
+  SCL   GP5
+  I2C-Adresse: 0x36
+
+Hinweis: MT6835 und AS5600 teilen GP4/GP5.
+         Nur einer der Encodertypen ist gleichzeitig aktiv (per ENCODER_TYPE_SELECT).
+
+============================================================
+BOARD: Waveshare RP2040 Zero
+============================================================
+
+MT6835 -- SPI0  (board-spezifische Neuzuweisung)
+  MISO  GP4
+  MOSI  GP7
+  SCK   GP6
+  CSN   GP5
+
+AS5600 (alternativ, nicht gleichzeitig) -- I2C0
+  SDA   GP4
+  SCL   GP5
+  I2C-Adresse: 0x36
+
+Hinweis: MT6835 und AS5600 teilen GP4/GP5.
+         Nur einer der Encodertypen ist gleichzeitig aktiv (per ENCODER_TYPE_SELECT).
+
+Hinweis Zero: MOSI und CSN sind gegenueber Plus 16MB getauscht
+              (GP7=MOSI, GP5=CSN statt GP5=MOSI, GP7=CSN),
+              da GP5 auf dem Zero-Layout als CSn-fuer-spi0 besser verfuegbar ist.
+
+============================================================

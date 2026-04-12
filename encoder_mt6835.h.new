@@ -1,0 +1,55 @@
+#ifndef ENCODER_MT6835_H
+#define ENCODER_MT6835_H
+
+#include <stdbool.h>
+#include <stdint.h>
+
+typedef struct {
+    uint32_t angle_raw;
+    uint8_t status;
+    uint8_t crc;
+    bool crc_valid;
+} mt6835_sample_t;
+
+typedef struct {
+    uint8_t uid;
+    uint32_t angle_raw;
+    float angle_deg;
+    uint8_t status;
+    uint8_t overspeed;
+    uint8_t weak_mag;
+    uint8_t undervoltage;
+    uint8_t crc;
+    bool crc_valid;
+    uint32_t abz_ppr;
+    uint8_t abz_off;
+    uint8_t ab_swap;
+    uint16_t zero_pos;
+    uint8_t z_edge;
+    uint8_t z_pulse_width;
+    uint8_t z_phase;
+    uint8_t uvw_mux;
+    uint8_t uvw_off;
+    uint8_t uvw_pairs;
+    uint8_t nlc_en;
+    uint8_t pwm_fq;
+    uint8_t pwm_pol;
+    uint8_t pwm_sel;
+    uint8_t rot_dir;
+    uint8_t hyst;
+    uint8_t gpio_ds;
+    uint8_t autocal_freq;
+    uint8_t bw;
+} mt6835_register_snapshot_t;
+
+void mt6835_init(void);
+bool mt6835_read_sample(mt6835_sample_t* out);
+bool mt6835_read_register(uint16_t address, uint8_t* out_value);
+bool mt6835_read_snapshot(mt6835_register_snapshot_t* out);
+void mt6835_report_registers(void);
+float mt6835_raw_to_degrees(uint32_t raw);
+float mt6835_compute_rpm(uint32_t prev_raw, uint32_t curr_raw, float dt_seconds);
+
+#define MT6835_ANGLE_MAX (1u << 21)
+
+#endif // ENCODER_MT6835_H
