@@ -23,11 +23,8 @@
 // 3=+Remora/W5500, 4=+UI-Core/Display/Touch, 5=+Encoder+Regeltimer (voller Pfad).
 #define HARDWARETEST_BRINGUP_STAGE   5u
 
-#if HARDWARETEST_MODE
-#define HARDWARE_WATCHDOG_ENABLE 0u
-#else
+// Hardware watchdog for runtime safety (1=enabled in production runs).
 #define HARDWARE_WATCHDOG_ENABLE 1u
-#endif
 
 // ============================================================
 // 2. PIN-BELEGUNG

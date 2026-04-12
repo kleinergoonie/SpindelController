@@ -1,0 +1,438 @@
+SpindelControllerAS5600 - Umsetzungsplan (Stand 2026-04-12)
+
+Fortschritt (Stand 2026-04-12)
+- Prozentuale Einordnung (Stand 2026-04-12):
+  - Gesamtstand: ca. 84 %
+  - Basis-Firmware / Kompilieren / Flashen: 98 %
+  - W5500 / Netzwerk-Grundfunktion: 85 %
+  - DHCP / Hostname / DNS-Verhalten: 75 %
+  - Motorregelung / Safety-Basis: 80 %
+  - Encoder- / Fehlerpfade: 70 %
+  - UI / Diagnose / Monitoring: 85 %
+  - Hardware-Validierung / Dauerlauftests: 55 %
+
+- Erledigt:
+  - Aktualisierung 2026-04-12 (neu): Build-Infrastruktur auf lokales Verzeichnis umgezogen (UNC-Pfad-Problem geloest).
+    - CMake-Build-Verzeichnis von \\nas\...\build auf C:\Build\SpindelControllerAS5600 verlegt.
+    - Ursache: cmd.exe/toolchain unterstuetzt keine UNC-Pfade als Arbeitsverzeichnis (CMake-Compiler-Test schlug fehl).
+    - cmake.buildDirectory in .vscode/settings.json auf C:/Build/SpindelControllerAS5600 gesetzt.
+    - cmake.sourceDirectory von falschem Unix-Pfad auf ${workspaceFolder} korrigiert.
+    - CMake neu konfiguriert, Build erfolgreich (111 Targets).
+
+  - Aktualisierung 2026-04-12 (neu): Board-Umschaltung zwischen Waveshare RP2040 Zero und RP2040 Plus 16MB implementiert.
+    - CMakeLists.txt: if(PICO_BOARD STREQUAL ...) setzt BOARD_WAVESHARE_RP2040_ZERO=1 oder BOARD_WAVESHARE_RP2040_PLUS_16MB=1 als Compile-Definition.
+    - config.h: board-spezifische Pin-Belegung per #if defined(BOARD_WAVESHARE_RP2040_ZERO) / #elif.
+      - Zero: GPIO-LED deaktiviert (BOARD_HAS_GPIO_LED=0), WS2812 auf GP16 (onboard NeoPixel), kein User-Key.
+      - Plus 16MB: GPIO-LED GP25, User-Key GP24, ext. WS2812 GP23.
+      - Neue Flags: BOARD_HAS_GPIO_LED, BOARD_HAS_USER_KEY.
+    - board_led.c: gesamte PWM-Implementierung in #if BOARD_HAS_GPIO_LED gewrappt; Zero erhaelt No-Op-Stubs.
+    - SpindelControllerAS5600.c: gpio_init/set_dir/put(PIN_BOARD_LED,...) im Minimal-Diagnostic-Block mit #if BOARD_HAS_GPIO_LED gesichert.
+    - Beide Boards bauen erfolgreich (Zero: 105 Targets, Plus 16MB: 111 Targets).
+    - Board wechseln: PICO_BOARD in CMakeLists.txt Zeile 29 aendern und CMake neu konfigurieren.
+    - Aktuell aktives Board: waveshare_rp2040_zero.
+  - Aktualisierung 2026-04-10 (neu): Positionsregelung mit Drehzahl-Hysterese fuer Gewindeschneiden gehaertet.
+    - Automatische Umschaltung auf Drehzahlregelung bei hoher Drehzahl eingefuehrt.
+    - Hysterese aktiv: Positionsregelung wird bei >= 5000 min^-1 deaktiviert und erst unter 4500 min^-1 wieder freigegeben.
+    - Neue Parameter in config.h: `POSITION_DISABLE_RPM_THRESHOLD` und `POSITION_ENABLE_RPM_THRESHOLD`.
+    - Laufzeitpfad auf effektiven Modus umgestellt (Host-Sollmodus bleibt erhalten, wirksam ist Modus mit Hysterese).
+    - Build nach Aenderung erfolgreich (Linking der ELF erfolgreich).
+
+  - Aktualisierung 2026-04-09 (neu): Motor-/LED-/Spindel-Ausgabepfad erweitert.
+    - `motor_control_set_duty(...)` akzeptiert jetzt signierte Sollwerte (-1.0 .. +1.0) und setzt die Richtung automatisch.
+    - Board-LED auf PWM-Dimmung umgestellt; Heartbeat-Helligkeit ueber `HB_LED_BRIGHTNESS` konfigurierbar.
+    - Neues Modul `spindle_ctrl` eingefuehrt: PWM-basierte Spindel-Analogvorgabe mit API
+      `spindle_ctrl_set_normalized(0..1)` und `spindle_ctrl_set_voltage(0..Vmax)`.
+    - Aktuelle Konfiguration: `SPINDLE_CTRL_VMAX_V = 5.0f` (externe OpAmp-Stufe fuer 0..5V/0..10V vorgesehen).
+  - Aktualisierung 2026-04-09 (neu): W5500-Netzwerk-Diagnose erweitert.
+    - `w5500_log_netinfo(...)` loggt jetzt zusaetzlich die effektive MAC-Adresse im Boot-/Diagnosepfad.
+
+  - Aktualisierung 2026-04-08 (neu): W5500/DHCP-Pfad weiter gehaertet und verifiziert.
+    - W5500 SPI-DMA-Burstpfad integriert und im Startlog bestaetigt.
+    - RP2040-Systemtakt auf 200MHz angehoben und per Startlog verifiziert.
+    - Serielle Frueh-Logs gehaertet; COM-Monitor funktioniert zuverlaessig mit DTR/RTS.
+    - PHY-Wartephase vor DHCP-Start, PHYCFGR-Diagnose und DHCP-Wiederverbindungs-Neustarts eingebaut.
+    - W5500 zeigt jetzt stabile Kommunikation mit VERSIONR=0x04.
+    - PHY wechselt im Startlog von DOWN auf UP nach kurzer Wartephase.
+  - Aktualisierung 2026-04-08 (neu): Hostname-/DNS-Pfad geklaert.
+    - DHCP-Hostname wird ohne MAC-Suffix gesendet.
+    - DHCP-Hostname in dhcp.h aktuell: "Spindelcontroller".
+    - Im Netz wurde ein DNS-A-Record fuer Spindelcontroller auf dem Router beobachtet.
+  - Aktualisierung 2026-04-08 (neu): W5500-Diagnose-Modus umgesetzt und verifiziert.
+    - Terminalausgabe auf reine W5500-Meldungen umgestellt (LEBENDIG/REMORA-Debugging unterdrueckt).
+    - Zusaetzliche W5500-Status-Meldungen integriert: Reset-Puls, SPI-Einrichtung (Pins/Hz), Version, Socket-/RX-/TX-Fehler.
+    - Kompilieren + Flashen + COM5-Validierung durchgefuehrt.
+  - Aktualisierung 2026-04-08 (neu): Pinbelegung entkoppelt.
+    - W5500_RST_PIN bleibt auf GPIO20.
+    - PIN_ESTOP auf GPIO3 verlegt.
+    - Compile-Time-Guard gegen erneute Kollision aktiv.
+  - Aktualisierung 2026-04-07 (neu): W5500/LAN-Diagnose-Pfad deutlich erweitert.
+    - DHCP fuer W5500 integriert, mit Zeitbegrenzung und Fallback auf statische IP.
+    - DHCP-Hostname initial auf "spindelcontroller" gesetzt; spaeter auf "Spindelcontroller" vereinheitlicht.
+    - W5500-Terminalausgaben erweitert: PHY-Verbindung, Statisch/DHCP/Fallback-IP, UDP-Socket-Status.
+    - Periodischer REMORA-Herzschlag-Log (rx_alter / endpoint) eingebaut.
+  - Aktualisierung 2026-04-07 (neu): Herzschlag-Anzeigen auf LEDs umgestellt.
+    - Board-LED signalisiert jetzt echten Remora-Herzschlag statt reinem Zeitblinken.
+    - WS2812-Status auf LAN/Herzschlag/Fehler/Wachter-Farben erweitert.
+    - Farbzustaende in ws-farben.txt dokumentiert.
+  - Aktualisierung 2026-04-07 (neu): W5500-Initialisierung weiter gehaertet.
+    - Hardware-Reset-Reihenfolge in der Initialisierung aktiv.
+    - Versions-Register-Pruefung (0x04 erwartet) und fruehes Schnellausstieg bei ungueltiger Kommunikation.
+  - Aktualisierung 2026-04-07 (neu): Terminalausgaben temporaer auf W5500/Remora fokussiert.
+    - Encoder-/LEBENDIG-/AS5600-Start-Logs deaktiviert, um LAN-Inbetriebnahme isoliert sichtbar zu machen.
+  - Aktualisierung 2026-03-30 (neu): Projektweite UART/Monitor-Telemetrie erweitert.
+    - LEBENDIG-Ausgabe um Sollwert, Betrieb, Aktivieren, Modus, Bremse, Fehler, Status-Wort sowie E/ÜS/ÜT/Wc/LAT/COD erweitert.
+    - Strom (ia) und Drehmoment (drehmoment) in LEBENDIG integriert.
+  - Aktualisierung 2026-03-30 (neu): AS5600-Diagnose auf Echtzeit umgestellt.
+    - MD/ML/MH werden zyklisch gepollt (unabhaengig von Winkelaenderung).
+    - Zustandswechsel wird sofort geloggt (AS5600 status ...).
+    - Abgelaufener Zustand bei Lesfehlern wird aktiv geloescht.
+  - Aktualisierung 2026-03-30 (neu): Windows-Monitor als Projekttool erstellt und erweitert.
+    - as5600_monitor.ps1 zeigt Live-Werte fuer Encoder + Projektstatus (Bremse/Sicherheit/Drehmoment/Status-Bits).
+    - COM5-Verwaltung gehaertet (Verbindungs-Wiederholung, Sperrhinweise, stabiler Trennvorgang).
+    - Optionale Konsolen-Steuerung integriert (-Konsole ausblenden + Anzeigen/Ausblenden-Schaltflaeche mit Fallback).
+  - Aktualisierung 2026-03-30 (neu): Ausfuehrung/Hochladen mit picotool gehaertet.
+    - Task-/Ablaufanpassungen und Wiederholung/Taktik fuer Windows-Aufzaehlungsfenster.
+
+  - P0-3 (teilweise): Fehler-Speicher in der Regelung eingebaut.
+    - Nach Hard-Fehler bleibt Antrieb gesperrt, bis explizit mit Aktivieren=0 quittiert wurde.
+    - Status-Bit fuer gespeicherten Fehler eingefuehrt.
+  - P0-1 (teilweise): Kompilierzeit Konfiguration-/Pin-Schuetzer in config.h ergaenzt.
+    - Encoder-Typ-Pruefung.
+    - Kritische Pin-Konflikte werden beim Kompilieren abgefangen.
+  - P1-3 (teilweise): Status-Bit-Namen zentralisiert und in UI-Dekodierung konsistent genutzt.
+  - P0-2 (teilweise): Encoder-Zeitbegrenzung als Fehlerfall implementiert.
+    - Kein gueltiges Encoder-Update > ENCODER_TIMEOUT_MS fuehrt zu Encoder-Fehler.
+    - Encoder-Fehler wird im Status-Bit-Feld gemeldet und loest Fehler-Speicher-Logik aus.
+  - P1-1 (teilweise): ST7789 echte Text-Benutzeroberflaeche implementiert.
+    - Titel + Soll/Ist Drehzahl + Betrieb/Modus + Fehler/Status-Bits werden direkt auf Display gezeichnet.
+    - Anzeige aktualisiert sich ereignisbasiert plus Heartbeat.
+  - P2-1 (umgesetzt): Sollwert-Rampe (Sanfter Start/Sanfter Halt) im Reglerpfad integriert.
+    - Rampengeschwindigkeit ueber SPINDLE_RAMP_RPM_PER_S konfigurierbar.
+  - Schoen-zu-haben umgesetzt: Drehmomentanzeige in der Benutzeroberflaeche.
+    - Schaetzung aus Motorstrom: T_est = I * MOTOR_TORQUE_CONSTANT_NM_PER_A.
+    - Anzeige als "TORQ x.xx NM" auf dem ST7789.
+  - Schoen-zu-haben umgesetzt: Drehmomentbetriebsart umschaltbar.
+    - TORQUE_DISPLAY_MODE in config.h: vorzeichenbehaftet oder Betrag |T|.
+  - Schoen-zu-haben umgesetzt: Drehmoment-Wert mit explizitem Vorzeichen.
+    - Anzeigeformat auf ST7789: TORQ +x.xx NM / TORQ -x.xx NM.
+    - Auch kleine negative Werte nahe 0 werden korrekt dargestellt.
+  - Motorsteuerung gehaertet.
+    - PWM nutzt dynamischen Systemtakt statt festem 125MHz-Wert.
+    - PID-Zuruecksetzen im Stop/Fehler-Pfad, kein Integriertes-Rest beim Wiederanlauf.
+    - Stop-Logik konsolidiert, Aktiv-Reihenfolge auf mode/duty vor enable umgestellt.
+  - Sicherheits-Logik gehaertet.
+    - Wachter-Zeitbegrenzungs-Semantik korrigiert (kein implizites Loeschen beim Tritt).
+    - Kick-Reihenfolge im Mainloop angepasst, Loop-Stalls werden sauber erkannt.
+  - Encoder-Start-Pfad gehaertet.
+    - Anfangswinkel-Lesvorgang mit Erfolgscode.
+    - MT6835 Initialwert nur bei gueltiger CRC.
+    - Start setzt Encoder-Fehler, falls Anfangslesvorgang fehlschlaegt.
+  - Remora/W5500 gehaertet (Stabilitaet/Sicherheit).
+    - Optionaler Strikter-Host-Filter aktiv (nur konfigurierter Host/IP+Port akzeptiert Befehls-Pakete).
+    - Auto-Neuinitialisierung bei Transportausfall eingebaut (zyklischer Wiederanlaufversuch).
+    - UDP-Hafen zentral ueber REMORA_SERVER_PORT konfiguriert.
+
+- Naechste Schritte:
+  - LinuxCNC/Remora-Zuordnung fuer Betriebsart-Umschaltung dokumentieren (M-Code/G-Code -> `control_mode`).
+  - Optionales Status-Bit/Diagnose-Feld fuer "Positionsregelung deaktiviert bei Drehzahl" fuer Host-Durchsichtigkeit pruefen.
+  - Gewindeschneiden-Validierung auf Hardware: Umschaltgrenzen 5000/4500 min^-1 unter realer Last pruefen und ggf. feinjustieren.
+  - P0-2 (rest): Cold-Start-/Fehlerstart-Testfaelle auf Hardware durchtesten und protokollieren.
+  - Siehe separate Datei: "Testmatrix Fehler Recovery.txt" fuer strukturierte BESTANDEN/FEHLER-Abarbeitung.
+  - W5500/LAN-Laufzeit-Pfad final absichern: DHCP-Lease-Uebergang im Serieller-Log noch explizit sichtbar machen und gegen Router-Anzeige abgleichen.
+  - DNS/Abtaster-Verhalten dokumentieren: Weiterleitungs-DNS vs. fehlender PTR/NetBIOS-Name fuer Tools wie Advanced IP Scanner festhalten.
+  - P1-1 (rest): Feinschliff Layout/Lesbarkeit und optional Mehrseitenansicht.
+  - P1-2: Fehler-Detailseite mit Speicher bis Quittierung.
+
+P0-2 Test-Checkliste (Kaltstart/Fehlerstart)
+1. Kaltstart ohne Ethernet-Verbindung
+  - Erwartung: Motor bleibt deaktiviert, kein Fehler-Speicher nur wegen fehlender Verbindung.
+  - Nachweis: status_bits ohne E/ÜS/ÜT/Wc/LAT/COD, Betrieb=0.
+
+2. Kaltstart mit aktivem Link, ohne Aktivieren vom Host
+  - Erwartung: Motor bleibt deaktiviert, keine ungewollte Bewegung.
+  - Nachweis: Aktivieren=0, Betriebsart=FREILAUF oder BREMSE, Betrieb=0.
+
+3. Start mit fehlendem Encoder-Signal
+  - Erwartung: nach ENCODER_TIMEOUT_MS wird COD gesetzt und Motor sicher gesperrt.
+  - Nachweis: status_bits enthalten COD und LAT, Betrieb=0.
+
+4. Wiederherstellung nach Encoder-Fehler
+  - Erwartung: Nach gueltigem Encoder-Signal bleibt LAT gesetzt bis explizite Quittierung (Aktivieren=0).
+  - Nachweis: COD geht weg, LAT bleibt; nach Quittierung LAT weg; danach erst Aktivieren erlaubt.
+
+5. Notausschalter waehrend Lauf
+  - Erwartung: sofort BREMSE, Betrieb=0, LAT gesetzt.
+  - Nachweis: status_bits enthalten E und LAT.
+
+6. Wachter/Ausfallsicherungs-Pfad
+  - Erwartung: bei Zeitbegrenzung sichere Abschaltung, kein automatisches Wiederanlaufen.
+  - Nachweis: status_bits enthalten Wc und LAT bis Quittierung.
+
+Ziel
+- Stabile Spindel-Steuerung auf RP2040 mit Remora-kompatibler UDP-Kommunikation (W5500), sauberer Sicherheits-Logik, Encoder-Rueckmeldung (AS5600 oder MT6835) und nachvollziehbarer Diagnose.
+
+Aktueller Ist-Stand
+- Kompilieren/Werkzeugkette:
+  - CMake + Ninja funktionsfaehig.
+  - VS Code Arbeitsbereich auf Windows mit expliziten Pico-Werkzeugpfaden konfiguriert.
+- Encoder:
+  - Kompilierzeit-Auswahl in config.h vorhanden.
+  - ENCODER_TYPE_MT6835 (SPI1) implementiert.
+  - ENCODER_TYPE_AS5600 (I2C0) implementiert.
+  - Vorgabewert aktuell auf MT6835 gesetzt.
+- Regelung/Motor:
+  - PID-Drehzahl-Regelung in control_loop_cb aktiv.
+  - Motor-Betriebsarten: Freilauf, Vorwaerts, Rueckwaerts, Bremse.
+  - Aktivieren/Betrieb/Betriebsart Steuerung vorhanden.
+- Sicherheit:
+  - Notausschalter, Ueberstrom, Uebertemperatur, Wachter-Zeitbegrenzung vorhanden.
+  - Fehler zwingt Motor in sicheren Zustand.
+- Kommunikation:
+  - Remora-Schnittstelle + W5500 UDP integriert.
+  - DHCP mit statischem Fallback integriert.
+  - DHCP-Hostname aktuell: Spindelcontroller.
+  - Rueckmeldung mit Status-Bits wird veroeffentlicht.
+  - Strikter-Host-Filter und Wiederverbindungs-Logik integriert.
+  - Erweiterte W5500-Terminal-Diagnose aktiv (Reset-Puls, SPI-Einrichtung, Version, PHY, DHCP/Statisch/Fallback, UDP-Socket, RX/TX-Fehler).
+  - W5500-Nur-Modus aktiv: Nicht-W5500-Logs (z. B. LEBENDIG/REMORA-Debugging) sind fuer die LAN-Fehlersuche unterdrueckt.
+  - W5500 SPI-DMA aktiv und im Startlog bestaetigt.
+  - Router/DNS zeigte zuletzt einen Forward-DNS-Eintrag fuer den DHCP-Hostnamen.
+- Anzeige:
+  - ST7789 Initialisierung vorhanden.
+  - Text-Benutzeroberflaeche aktiv (Soll/Ist Drehzahl, Betrieb, Betriebsart, Fehler/Status-Bits, Drehmomentanzeige).
+- WS2812/LED-Status:
+  - WS2812 zeigt LAN-/Herzschlag-/Fehler-/Wachter-Zustand mit unterschiedlichen Farben.
+  - Board-LED zeigt Herzschlag-Empfang-Zustand und ist per PWM-Helligkeit regelbar (`HB_LED_BRIGHTNESS`).
+
+- Spindel-Steuerungs-Ausgang (analog per PWM):
+  - Neues Modul `spindle_ctrl` aktiv (GPIO in `config.h`: `PIN_SPINDLE_CTRL`).
+  - Sollwert-Ausgabe 0..Vmax ueber PWM, skalierbar per `SPINDLE_CTRL_VMAX_V`.
+  - Fuer echte 0..5V/0..10V ist externe Filter-/Betriebsverstaerker-Stufe vorgesehen.
+- PC-Ueberwachung:
+  - as5600_monitor.ps1 vorhanden und fuer Gesamtprojekt erweitert.
+  - Live-Anzeige fuer MD/ML/MH, COD roh, Drehzahl, Sicherheit/Fehler/Bremse, Betrieb/Betriebsart, Strom/Drehmoment.
+  - Verbindung/Trennung robust gegen COM-Anschluss-Sperren.
+- Mehrkern:
+  - Core0: Regelung, Sicherheit, Remora.
+  - Core1: Benutzeroberflaeche-Aktualisierung (threadfest via Snapshot + kritischer Bereich).
+
+Bekannte Risiken / Beobachtungen
+- Der Kompilierordner liegt lokal unter C:\Build\SpindelControllerAS5600 (nicht mehr im NAS-build-Verzeichnis).
+  Bei Fehlen einfach CMake neu konfigurieren: cmake -S \\nas\...\SpindelControllerAS5600_Teil-... -B C:\Build\SpindelControllerAS5600 -G Ninja
+- cmd.exe unterstuetzt keine UNC-Pfade (\\server\share) als Arbeitsverzeichnis - Toolchain-Aufrufe schlagen sonst fehl.
+- VS Code Popup zu CMake/Ninja tritt auf, wenn Erweiterungs-Host PFAD nicht den bestaendigen Benutzer-PFAD uebernimmt (Neustart behebt das meist).
+- AS5600 DIR ist Hardware-Pin (nicht per I2C konfigurierbar); Drehrichtung muss elektrisch korrekt verdrahtet sein.
+- Bei Striktem-Host-Filter muessen REMORA_SERVER_IP_x und REMORA_SERVER_PORT exakt zum Host passen, sonst werden RX-Befehle verworfen.
+- Erweiterter IP-Abtaster zeigt nicht zwingend den DHCP-Hostnamen an; ohne PTR/NetBIOS/mDNS kann nur die IP erscheinen.
+- Router-/DNS-Speicher koennen alte Namen oder alte IP-Zuordnungen noch voruebergehend weiter anzeigen.
+- DHCP ist ueber Router/DNS plausibel nachgewiesen, aber der explizite LEASED/IP_ASSIGN-Serieller-Log wurde im Erfassungsfenster noch nicht immer gesehen.
+- Anzeigen/Ausblenden-Konsole kann je nach Host (insb. integrierte Terminals) eingeschraenkt sein; Fallback ueber powershellw ist implementiert.
+
+Arbeitsplan (naechste Schritte)
+
+Phase 1 - Stabilitaet (kurzfristig)
+1. Finalkonfiguration Pinbelegung verifizieren (AS5600 SDA/SCL/DIR, Motor, Notausschalter, ADC).
+2. Kaltstart-Testmatrix fahren:
+   - Start ohne Netzwerk
+   - Start mit Netzwerk
+   - Encoder fehlt / Sensorfehler
+3. Wachter- und Fehler-Wiederherstellung pruefen (kein ungewolltes Wiederanlaufen).
+
+Phase 2 - Anzeige/Diagnose (kurzfristig)
+1. Echte ST7789 Text-Darstellung statt reiner UART-Status-Zeilen.
+2. Fehler-Seite: letzte Fehlerursache bestaendig bis Quittierung.
+3. Telemetrie-Format harmonisieren (Benutzeroberflaeche, UART, Remora Rueckmeldung konsistent).
+
+Phase 3 - Regelungs-Abstimmung (mittelfristig)
+1. PID-Abstimmung fuer Lastwechsel (Anfahr-Drehzahl, Lastspruenge, Bremsen).
+2. Rampen-Logik fuer Sollwert (Sanfter Start/Sanfter Halt) ergaenzen.
+3. Wahlweise Vorsteuerung fuer bessere Dynamik bei hohen Drehzahlen.
+
+Phase 4 - Schnittstelle LinuxCNC/Remora (mittelfristig)
+1. Soll-/Ist-Signal-Pfade validieren (Richtung, Aktivieren, Bremse, Drehzahl).
+2. Fehler-Bits und Zustandsautomat fuer Host-Integration dokumentieren.
+3. Integrations-Test mit echtem LinuxCNC Setup.
+
+Definition of Done
+- 30-Minuten Dauerlauf ohne Sicherheits-Fehler und ohne Kommunikations-Abbruch.
+- Stabiles Start/Halt/Bremsen-Verhalten in Vorwaerts und Rueckwaerts.
+- Drehzahl-Abweichung im Zielbereich bei Nennlast (Grензwert gemeinsam festlegen).
+- Klar lesbare Diagnose auf Anzeige + im Host-Rueckmeldung.
+
+- Kompilierungs- und Betriebsnotizen
+- Konfiguration (Build-Verzeichnis lokal, Quellen auf NAS):
+  cmake -S \\nas\Daten\SpindelController\SpindelControllerAS5600_Teil-Hardwaretest_SPAS5600 -B C:\Build\SpindelControllerAS5600 -G Ninja
+- Board wechseln (Zero / Plus 16MB): PICO_BOARD in CMakeLists.txt Zeile 29 aendern, dann CMakeCache.txt loeschen und cmake neu ausfuehren.
+- Kompilieren:
+  ninja -C C:\Build\SpindelControllerAS5600
+- Zweiten Board-Build (Plus 16MB):
+  cmake -S ... -B C:\Build\SpindelControllerAS5600_Plus16MB -G Ninja -DPICO_BOARD=waveshare_rp2040_plus_16mb
+  ninja -C C:\Build\SpindelControllerAS5600_Plus16MB
+- Bei PFAD-Popup in VS Code:
+  - VS Code komplett neu starten
+  - sicherstellen, dass Benutzer-PFAD cmake und ninja aus .pico-sdk enthaelt
+
+Offene Entscheidungen
+- Finaler Encoder fuer Serienbetrieb:
+  - AS5600 (I2C, einfach) oder MT6835 (SPI, CRC)
+- Gewuenschte UI-Seite auf ST7789:
+  - Kompaktstatus oder Mehrseiten-Ansicht
+- Zielgrenzen fuer Regelguete (z. B. max. rpm Fehler in Prozent)
+- Gewuenschter Drehmoment-Anzeigemodus:
+  - signed (richtungsabhaengig) oder abs (|T|)
+  - Aktueller Default im Code: signed
+
+Sprint Backlog (P0/P1/P2)
+
+P0 - Muss zuerst fertig sein
+1. Pinbelegung final fixieren und dokumentieren
+  - Ergebnis: config.h entspricht realer Verdrahtung (AS5600/Motor/Safety/ADC)
+  - Akzeptanz: Board startet ohne Pin-Konflikte, Encoder liefert plausible Werte
+  - Aufwand: S
+
+2. Cold-Start- und Fehlerstart-Szenarien absichern
+  - Ergebnis: definierte Reaktion auf Boot ohne Netzwerk, Encoder-Fehler, Sensor-Ausfall
+  - Akzeptanz: kein unkontrolliertes Anlaufen, Fault-Bits sauber gesetzt
+  - Aufwand: M
+
+3. Watchdog/Fault-Recovery robust machen
+  - Ergebnis: Wiederanlauf nur nach gueltiger Freigabe, kein Auto-Restart in Fault
+  - Akzeptanz: E-Stop/Overcurrent/Watchdog-Tests reproduzierbar bestanden
+  - Aufwand: M
+
+4. Build/Configure-Pipeline stabilisieren
+  - Ergebnis: build/ wird bei Bedarf reproduzierbar neu erzeugt, Build in VS Code stabil
+  - Akzeptanz: 3 aufeinanderfolgende Configure+Build ohne manuelle Workarounds
+  - Status: ERLEDIGT (2026-04-12) - lokales Build-Verzeichnis, UNC-Problem geloest, Board-Umschaltung aktiv
+
+P1 - Sollte im naechsten Zyklus rein
+1. ST7789 echte Text-UI statt nur Log-Ausgabe
+  - Ergebnis: Soll/Ist RPM, Duty, Mode, Fault sichtbar auf Display
+  - Akzeptanz: UI-Refresh stabil, keine Blockierung von Core0
+  - Aufwand: M
+
+2. Fault-Detailseite mit Latch bis Quittierung
+  - Ergebnis: letzte Fehlerursache bleibt sichtbar bis Confirm/Reset
+  - Akzeptanz: Fehlerhistorie im Betrieb nachvollziehbar
+  - Aufwand: M
+
+3. Telemetrie konsolidieren (UART/UI/Remora)
+  - Ergebnis: einheitliche Benennung und Bitzuordnung in allen Ausgaben
+  - Akzeptanz: gleiche Statusinterpretation in allen Kanaelen
+  - Aufwand: S
+
+4. PID-Basistuning fuer Lastwechsel
+  - Ergebnis: weniger Ueber/Unterschwingen beim Anfahren und Bremsen
+  - Akzeptanz: definierter Testlauf mit besserer Einschwingzeit
+  - Aufwand: M
+
+P2 - Nice to have / Erweiterung
+1. Setpoint-Rampe (Softstart/Softstop)
+  - Ergebnis: mechanisch sanftere Drehzahlwechsel
+  - Akzeptanz: keine harten Stromspitzen beim Sollwertsprung
+  - Aufwand: S
+
+2. Feedforward-Anteil fuer hohe Drehzahlen
+  - Ergebnis: bessere Dynamik bei Lastaenderung oben im Drehzahlbereich
+  - Akzeptanz: geringerer stationaerer Fehler bei hoher RPM
+  - Aufwand: M
+
+3. LinuxCNC/Remora Integrationsabnahme
+  - Ergebnis: Ende-zu-Ende Test mit realer Host-Konfiguration
+  - Akzeptanz: Soll/Ist/Fault korrekt uebertragen und ausgewertet
+  - Aufwand: L
+
+Sprint 1 Vorschlag (konkret)
+1. P0-1 Pinbelegung final fixieren
+2. P0-2 Cold-Start/Fehlerstart absichern
+3. P0-3 Watchdog/Fault-Recovery robust machen
+4. P1-1 ST7789 Text-UI aufsetzen
+
+Sprint 2 Vorschlag (konkret)
+1. P1-2 Fault-Detailseite mit Latch
+2. P1-3 Telemetrie konsolidieren
+3. P1-4 PID-Basistuning
+4. P2-1 Setpoint-Rampe
+
+Projektfortschritt in Prozent (Stand 2026-04-12)
+- Gesamtprojekt: 84%
+- Build/Toolchain/VS-Code-Setup: 98% (lokales Build-Verz., Board-Umschaltung, UNC-Pfad-Problem geloest)
+- Motorregelung (PID, Modi, Rampen): 88%
+- Safety (E-Stop, OC, WD, Fault-Latch): 89%
+- Encoder-Subsystem (AS5600/MT6835 + Timeout): 90%
+- Display/UI (Text-UI, Statusbits, Torque): 78%
+- Remora/W5500-Kommunikation: 90%
+- LinuxCNC-Endintegration/Abnahme: 40%
+- Test/Validierung auf echter Hardware: 58%
+- Dokumentation/Abnahmekriterien: 89%
+
+Ergaenzung Stand 2026-04-12
+- Build-Infrastruktur auf lokales Verzeichnis migriert (C:\Build\SpindelControllerAS5600).
+  Ursache: UNC-Pfade werden von cmd.exe nicht als Arbeitsverzeichnis unterstuetzt.
+- Board-Umschaltung Zero <-> Plus 16MB vollstaendig implementiert und fuer beide Boards getestet.
+  Aktuell aktives Board: waveshare_rp2040_zero (onboard NeoPixel GP16, kein GPIO-LED, kein User-Key).
+- P0-4 (Build-Pipeline) als erledigt markiert.
+
+Kurzbegruendung
+- Kernfunktionen sind implementiert und build-stabil.
+- Hauptrestaufwand liegt in Hardware-Testtiefe, Fault-Recovery-Nachweisen und finaler LinuxCNC-Endintegration.
+- Die fehlenden Prozentpunkte sind ueberwiegend hardwareseitig (Verdrahtung, Inbetriebnahme, Dauerlauf- und Lasttests, Endabnahme).
+
+Statusfestlegung
+- Softwareseitig gilt das Projekt als fertig.
+- Offene Punkte betreffen ausschließlich Hardware (Inbetriebnahme, Validierung, Abnahme).
+
+Inbetriebnahme Spindel-Control (0..Vmax) - Messpunkte und Sollwerte
+
+Ziel
+- Verifizieren, dass der neue `spindle_ctrl`-Pfad sauber von Sollwert auf analogen Ausgang arbeitet.
+- Messung in drei Stufen: PWM-Pin, RC-Ausgang, OpAmp-Ausgang.
+
+Voraussetzungen
+- Build/Flash mit aktuellem Stand.
+- Konfiguration in `config.h` geprueft:
+  - `PIN_SPINDLE_CTRL`
+  - `SPINDLE_CTRL_VMAX_V` (aktuell 5.0f)
+  - `SPINDLE_CTRL_FREQ_HZ`
+- Gemeinsame Masse zwischen RP2040, Filterstufe, OpAmp und Messgeraet.
+
+Messpunkte
+1. MP1: RP2040 PWM direkt am `PIN_SPINDLE_CTRL`
+  - Erwartung: Rechtecksignal 0..3.3V mit konfigurierter Frequenz.
+2. MP2: Nach RC-Tiefpass (vor OpAmp)
+  - Erwartung: geglaettete DC-Spannung ca. 0..3.3V.
+3. MP3: OpAmp-Ausgang (Regler-Eingangssignal)
+  - Erwartung: 0..Vmax gemaess eingestellter Verstarkung (z. B. 0..5V oder 0..10V).
+
+Pruefschritte
+1. Initialisierung bestaetigen (`spindle_ctrl_init()` im Bootpfad).
+2. Nacheinander Sollwerte setzen:
+  - `spindle_ctrl_set_normalized(0.0f);`
+  - `spindle_ctrl_set_normalized(0.5f);`
+  - `spindle_ctrl_set_normalized(1.0f);`
+3. Alternativ spannungsbasiert testen:
+  - `spindle_ctrl_set_voltage(0.0f);`
+  - `spindle_ctrl_set_voltage(SPINDLE_CTRL_VMAX_V * 0.5f);`
+  - `spindle_ctrl_set_voltage(SPINDLE_CTRL_VMAX_V);`
+
+Sollwerte je Testpunkt (Richtwerte)
+- Bei 0%:
+  - MP1 Duty ~0%
+  - MP2 ~0V
+  - MP3 ~0V
+- Bei 50%:
+  - MP1 Duty ~50%
+  - MP2 ~1.65V
+  - MP3 ~Vmax/2 (z. B. 2.5V bei Vmax=5V oder 5.0V bei Vmax=10V)
+- Bei 100%:
+  - MP1 Duty ~100%
+  - MP2 ~3.3V
+  - MP3 ~Vmax
+
+Abnahmekriterien
+- Abweichung MP3 bei 0/50/100% jeweils im akzeptierten Fenster (z. B. <= +/-3%).
+- Kein sichtbares Pumpen/Flattern am Regler-Eingang im stationaeren Zustand.
+- Bei Fault/Disable wird Ausgang sicher auf 0 gesetzt (funktional pruefen).
+
+Hinweis
+- RP2040 liefert kein echtes DAC-Signal. Die Endqualitaet von MP3 haengt von RC-Auslegung, OpAmp-Typ, Versorgung und Lastimpedanz des Zielreglers ab.

@@ -290,8 +290,24 @@ void display_st7789_update_status(float setpoint_rpm,
     static int16_t last_duty_tenths = -1;
     static int16_t last_torque_centi = -32768;
     static uint32_t last_log_ms = 0u;
+    static uint32_t latched_fault_bits = 0u;
 
     const uint32_t now_ms = to_ms_since_boot(get_absolute_time());
+        const uint32_t fault_source_mask =
+            (1u << STATUS_BIT_ESTOP) |
+            (1u << STATUS_BIT_OVERCURRENT) |
+            (1u << STATUS_BIT_OVERTEMP) |
+            (1u << STATUS_BIT_WATCHDOG) |
+            (1u << STATUS_BIT_ENCODER_FAULT);
+
+        const uint32_t active_fault_sources = status_bits & fault_source_mask;
+        if (active_fault_sources != 0u) {
+            // Keep the last concrete fault source visible while LAT is set.
+            latched_fault_bits = active_fault_sources;
+        } else if ((status_bits & (1u << STATUS_BIT_FAULT_LATCHED)) == 0u) {
+            latched_fault_bits = 0u;
+        }
+
     const int16_t setpoint_i = (int16_t)(setpoint_rpm + 0.5f);
     const int16_t measured_i = (int16_t)(measured_rpm + 0.5f);
     const int16_t duty_tenths = (int16_t)(duty * 1000.0f + 0.5f);
@@ -363,8 +379,25 @@ void display_st7789_update_status(float setpoint_rpm,
     st7789_draw_text(4, 82, line[0] ? line : "OK", fg, bg, 1);
 
     st7789_fill_rect(0, 96, DISPLAY_WIDTH, 12, bg);
-    snprintf(line, sizeof(line), "ENCODER %s", encoder_str);
-    st7789_draw_text(4, 98, line, COLOR_MUTED, bg, 1);
+    if (latched_fault_bits != 0u) {
+        const char* src = "UNKNOWN";
+        if ((latched_fault_bits & (1u << STATUS_BIT_ESTOP)) != 0u) {
+            src = "ESTOP";
+        } else if ((latched_fault_bits & (1u << STATUS_BIT_OVERCURRENT)) != 0u) {
+            src = "OVERCURRENT";
+        } else if ((latched_fault_bits & (1u << STATUS_BIT_OVERTEMP)) != 0u) {
+            src = "OVERTEMP";
+        } else if ((latched_fault_bits & (1u << STATUS_BIT_WATCHDOG)) != 0u) {
+            src = "WATCHDOG";
+        } else if ((latched_fault_bits & (1u << STATUS_BIT_ENCODER_FAULT)) != 0u) {
+            src = "ENCODER";
+        }
+        snprintf(line, sizeof(line), "FAULT SRC %s", src);
+        st7789_draw_text(4, 98, line, COLOR_WARN, bg, 1);
+    } else {
+        snprintf(line, sizeof(line), "ENCODER %s", encoder_str);
+        st7789_draw_text(4, 98, line, COLOR_MUTED, bg, 1);
+    }
 
     st7789_fill_rect(0, 110, DISPLAY_WIDTH, 12, bg);
     const char torque_sign = (torque_centi < 0) ? '-' : '+';

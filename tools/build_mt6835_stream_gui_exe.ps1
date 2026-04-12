@@ -2,7 +2,7 @@
 # Requires: Install-Module -Name ps2exe -Scope CurrentUser
 
 $scriptPath = Join-Path $PSScriptRoot 'mt6835_stream_gui.ps1'
-$outPath = Join-Path $PSScriptRoot '..\\..\\bin\\mt6835_stream_gui.exe'
+$outPath = Join-Path $PSScriptRoot '..\\bin\\mt6835_stream_gui.exe'
 
 if (-not (Test-Path $scriptPath)) {
     Write-Error "Script not found: $scriptPath"
