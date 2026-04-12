@@ -1,5 +1,4 @@
 using System;
-using System.IO.Ports;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -111,10 +110,32 @@ namespace WinGuiMt6835
         private void RefreshPorts()
         {
             cbPorts.Items.Clear();
-            var ports = SerialPort.GetPortNames().OrderBy(n => n).ToArray();
+            string[] ports = GetPortNames();
+            Array.Sort(ports, StringComparer.OrdinalIgnoreCase);
             foreach (var p in ports) cbPorts.Items.Add(p);
             AppendLog($"Available ports: {string.Join(", ", ports)}");
             if (cbPorts.Items.Count > 0) cbPorts.SelectedIndex = 0;
+        }
+
+        private string[] GetPortNames()
+        {
+            try
+            {
+                // Try compile-time type first
+                var t = Type.GetType("System.IO.Ports.SerialPort, System.IO.Ports");
+                if (t == null) t = Type.GetType("System.IO.Ports.SerialPort, System.IO.Ports.SerialPort");
+                if (t != null)
+                {
+                    var mi = t.GetMethod("GetPortNames", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+                    if (mi != null)
+                    {
+                        var res = mi.Invoke(null, null) as string[];
+                        if (res != null) return res;
+                    }
+                }
+            }
+            catch { }
+            return new string[0];
         }
 
         private void BtnConnect_Click(object sender, EventArgs e)
